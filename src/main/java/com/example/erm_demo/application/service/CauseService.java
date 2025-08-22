@@ -8,7 +8,7 @@ public interface CauseService {
 
     CauseDto getCauseById(Long id);
     CauseDto createCause(CauseDto causeDto);
-    CauseDto updateCause(Long id, CauseDto causeDto);
+    CauseDto updateCause( CauseDto causeDto);
     void deleteCause(Long id);
     List<CauseDto> getAllCauses();
 }

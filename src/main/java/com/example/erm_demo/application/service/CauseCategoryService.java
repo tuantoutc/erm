@@ -8,7 +8,7 @@ public interface CauseCategoryService {
 
     CauseCategoryDto createCauseCategory(CauseCategoryDto causeCategoryDto);
 
-    CauseCategoryDto updateCauseCategory(Long id,CauseCategoryDto causeCategoryDto);
+    CauseCategoryDto updateCauseCategory(CauseCategoryDto causeCategoryDto);
 
     CauseCategoryDto getCauseCategoryById(Long id);
 

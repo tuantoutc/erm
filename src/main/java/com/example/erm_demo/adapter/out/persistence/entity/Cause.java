@@ -34,6 +34,6 @@ public class Cause {
     @JoinColumn(name = "cause_category_id", nullable = false)
     CauseCategory causeCategory;
 
-    @OneToMany(mappedBy = "cause", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cause", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<CauseMap> causeMaps;
 }

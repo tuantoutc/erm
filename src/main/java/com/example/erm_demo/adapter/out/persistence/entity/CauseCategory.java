@@ -37,7 +37,7 @@ public class CauseCategory {
     )
     List<Cause> causes;
 
-    @OneToMany(mappedBy = "causeCategory", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "causeCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<CauseCategoryMap> causeCategoryMaps;
 
 

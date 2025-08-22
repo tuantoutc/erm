@@ -1,8 +1,11 @@
 package com.example.erm_demo.adapter.in.rest.dto;
 
 
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -12,13 +15,15 @@ import lombok.experimental.FieldDefaults;
 public class CauseDto{
 
     Long id;
+    @Size(min = 3, message = "Code must be at least 3 characters long")
     String code;
+    @Size(min = 3, message = "Code must be at least 3 characters long")
     String name;
     String type; //  Sự cố, rủi ro
     String origin;
     String description; // Mô tả
     String note;
     Boolean isActive;
-    Long systemId; // ID của hệ thống mà nguyên nhân này thuộc về
     CauseCategoryDto causeCategoryDto;
+    List<SystemDto> systemDtos;
 }
