@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CauseController {
 
-
     private final CauseService causeService;
 
     @PostMapping

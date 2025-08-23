@@ -1,6 +1,8 @@
 package com.example.erm_demo.adapter.out.persistence.entity;
 
 
+import com.example.erm_demo.domain.enums.Origin;
+import com.example.erm_demo.domain.enums.TypeERM;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,12 +17,18 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Cause {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
     String code;
     String name;
-    String type; //  Sự cố, rủi ro
-    String origin; // Bên ngoài, nội bộ
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    TypeERM type; //  Sự cố, rủi ro
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "origin")
+    Origin origin; // Bên ngoài, nội bộ
+
     @Lob /// (Large Object) báo cho JPA biết đây là trường dữ liệu lớn.
     @Column(columnDefinition = "TEXT")
     String description;

@@ -19,7 +19,7 @@ import java.util.List;
 public class CauseCategory {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
     String code;
     String name;
