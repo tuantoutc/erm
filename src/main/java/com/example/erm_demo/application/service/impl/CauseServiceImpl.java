@@ -6,8 +6,14 @@ import com.example.erm_demo.adapter.out.persistence.mapper.CauseMapper;
 import com.example.erm_demo.adapter.out.persistence.repository.CauseRepository;
 import com.example.erm_demo.application.service.CauseService;
 import com.example.erm_demo.domain.enums.ErrorCode;
+import com.example.erm_demo.domain.enums.Origin;
+import com.example.erm_demo.domain.enums.TypeERM;
 import com.example.erm_demo.domain.exception.AppException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +21,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class CauseServiceImpl implements CauseService {
+
 
     private final CauseRepository causeRepository;
     private final CauseMapper causeMapper;
@@ -78,4 +85,21 @@ public class CauseServiceImpl implements CauseService {
         }
         return List.of();
     }
+
+    @Override
+    public Page<CauseDto> searchByKeyWord(PageRequest pageRequest, String keyword, TypeERM type, Origin origin, Boolean isActive) {
+
+        Sort sortBy = Sort.by("id").ascending();
+        Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
+
+        String originStr = (origin != null) ? origin.name() : null;
+        String typeStr = (type != null) ? type.name() : null;
+
+
+        Page<Cause> causes = causeRepository.search(keyword, typeStr, originStr, isActive, pageable);
+        return causes.map(causeMapper::mapToCauseDto);
+
+    }
+
+
 }

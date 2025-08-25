@@ -27,7 +27,7 @@ public class CauseCategoryMapper {
     public CauseCategory mapUpdate(CauseCategory entity, CauseCategoryDto dto) {
         entity.getCauseCategoryMaps().clear();// Clear existing mappings
 
-        entity = modelMapper.map(dto, CauseCategory.class);
+        // Xóa và cập nhật mappings
         setCauseCategoryMapSystemFromDto(entity, dto);
 
         return entity;
@@ -37,7 +37,7 @@ public class CauseCategoryMapper {
     public CauseCategoryDto mapToDto(CauseCategory causeCategory) {
         CauseCategoryDto dto = modelMapper.map(causeCategory, CauseCategoryDto.class);
         if (causeCategory.getCauseCategoryMaps() != null) {
-            List<SystemDto> systemDtos = causeCategory.getCauseCategoryMaps().stream()
+            final List<SystemDto> systemDtos = causeCategory.getCauseCategoryMaps().stream()
                     .map(causeCategoryMap -> {
                         SystemDto systemDto = new SystemDto();
                         systemDto.setId(causeCategoryMap.getSystemId());

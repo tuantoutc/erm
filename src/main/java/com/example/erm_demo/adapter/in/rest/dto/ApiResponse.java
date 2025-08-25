@@ -18,6 +18,7 @@ public class ApiResponse <T> {
     T data;
     Long page;
     Long size;
+    String sortBy;
     String sort;
     Long totalElements;
     Long totalPages;

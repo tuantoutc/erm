@@ -9,6 +9,10 @@ import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.exception.AppException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,14 +70,28 @@ public class CauseCategoryServiceImpl implements CauseCategoryService {
     }
 
     @Override
-    public List<CauseCategoryDto> getAllCauseCategories() {
-        List<CauseCategory> causeCategories = causeCategoryRepository.findAll();
+    public Page<CauseCategoryDto> getAllCauseCategories( PageRequest pageRequest) {
+        Sort sortBy = Sort.by("id").ascending();
+        Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
+        Page<CauseCategory> causeCategories = causeCategoryRepository.findAll(pageable);
         if (!causeCategories.isEmpty()) {
-            return causeCategories.stream()
-                    .map(causeCategoryMapper::mapToDto)
-                    .toList();
-        } else
-            return List.of();
+            return causeCategories.map(causeCategoryMapper::mapToDto);
+        }
+        else
+            return null;
+
+    }
+
+    @Override
+    public Page<CauseCategoryDto> searchCauseCategories(String code, Long systemId, PageRequest pageRequest) {
+
+        Sort sortBy = Sort.by("id").ascending();
+        Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
+
+        Page<CauseCategory> causeCategoryPage = causeCategoryRepository.findAllBy(code, systemId, pageable);
+
+        // Always return a Page, never null
+        return causeCategoryPage.map(causeCategoryMapper::mapToDto);
     }
 
 }

@@ -27,7 +27,7 @@ public class CauseMapper {
 
     public Cause maptoCause(CauseDto dto) {
         Cause entity = modelMapper.map(dto, Cause.class);
-
+        entity.setId(null);
         setCauseMapSystemFromDto(entity, dto);
         return entity;
     }

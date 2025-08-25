@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,6 +21,6 @@ public class CauseCategoryDto {
     String name;
     String description; // Mô tả
     String note;
-    List<SystemDto> systemDtos; // ID của hệ thống mà loại nguyên nhân này thuộc về
-
+    @Builder.Default
+    List<SystemDto> systemDtos = new ArrayList<>(); // ID của hệ thống mà loại nguyên nhân này thuộc về
 }
