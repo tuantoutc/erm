@@ -12,10 +12,10 @@ public interface CauseService {
 
     CauseDto getCauseById(Long id);
     CauseDto createCause(CauseDto causeDto);
-    CauseDto updateCause( CauseDto causeDto);
+    CauseDto updateCause(CauseDto causeDto);
     void deleteCause(Long id);
     List<CauseDto> getAllCauses();
 
-    Page<CauseDto> searchByKeyWord(PageRequest pageRequest, String keyword, TypeERM type, Origin origin, Boolean isActive);
+    Page<CauseDto> searchByKeyWord( String code, TypeERM type, Origin origin, Boolean isActive,PageRequest pageRequest);
 
 }

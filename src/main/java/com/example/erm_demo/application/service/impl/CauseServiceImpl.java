@@ -87,16 +87,12 @@ public class CauseServiceImpl implements CauseService {
     }
 
     @Override
-    public Page<CauseDto> searchByKeyWord(PageRequest pageRequest, String keyword, TypeERM type, Origin origin, Boolean isActive) {
+    public Page<CauseDto> searchByKeyWord(String code, TypeERM type, Origin origin, Boolean isActive, PageRequest pageRequest) {
 
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
 
-        String originStr = (origin != null) ? origin.name() : null;
-        String typeStr = (type != null) ? type.name() : null;
-
-
-        Page<Cause> causes = causeRepository.search(keyword, typeStr, originStr, isActive, pageable);
+        Page<Cause> causes = causeRepository.search(code, type, origin, isActive, pageable);
         return causes.map(causeMapper::mapToCauseDto);
 
     }

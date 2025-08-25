@@ -19,7 +19,9 @@ public class Cause {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
+    @Column(unique = true)
     String code;
+    @Column(unique = true)
     String name;
     @Enumerated(EnumType.STRING)
     @Column(name = "type")

@@ -1,57 +1,52 @@
 package com.example.erm_demo.adapter.in.rest.controller;
 
-
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
-import com.example.erm_demo.adapter.in.rest.dto.CauseCategoryDto;
-import com.example.erm_demo.application.service.CauseCategoryService;
+import com.example.erm_demo.adapter.in.rest.dto.AttributeGroupDto;
+import com.example.erm_demo.application.service.AttributeGroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-@RequestMapping("/cause-category")
+@RequestMapping("/attribute-group")
 @RequiredArgsConstructor
-public class CauseCategoryController {
+public class AttributeGroupController {
 
-
-    private final CauseCategoryService causeCategoryService;
+    private final AttributeGroupService attributeGroupService;
 
     @PostMapping
-    public ApiResponse<CauseCategoryDto> createCauseCategory(@RequestBody @Valid CauseCategoryDto dto) {
+    public ApiResponse<AttributeGroupDto> createAttributeGroup(@RequestBody @Valid AttributeGroupDto dto) {
 
-        return ApiResponse.<CauseCategoryDto>builder()
+        return ApiResponse.<AttributeGroupDto>builder()
                 .message("Success")
-                .data(causeCategoryService.createCauseCategory(dto))
+                .data(attributeGroupService.createAttributeGroup(dto))
                 .build();
     }
 
     @PutMapping
-    public ApiResponse<CauseCategoryDto> updateCauseCategory(@RequestBody @Valid CauseCategoryDto dto) {
+    public ApiResponse<AttributeGroupDto> updateAttributeGroup(@RequestBody @Valid AttributeGroupDto dto) {
 
-        return ApiResponse.<CauseCategoryDto>builder()
+        return ApiResponse.<AttributeGroupDto>builder()
                 .message("Success")
-                .data(causeCategoryService.updateCauseCategory(dto))
+                .data(attributeGroupService.updateAttributeGroup(dto))
                 .build();
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<CauseCategoryDto> getCauseCategoryById(@PathVariable("id") Long id) {
-
-
-        return ApiResponse.<CauseCategoryDto>builder()
+    public ApiResponse<AttributeGroupDto> getAttributeGroupById(@PathVariable("id") Long id) {
+        return ApiResponse.<AttributeGroupDto>builder()
                 .message("Success")
-                .data(causeCategoryService.getCauseCategoryById(id))
+                .data(attributeGroupService.getAttributeGroupById(id))
                 .build();
     }
 
     @GetMapping()
-    public ApiResponse<?> getAllCauseCategory( @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                    @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ApiResponse<?> getAllAttributeGroup(@RequestParam(value = "page", defaultValue = "0") int page,
+                                               @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<CauseCategoryDto> result = causeCategoryService.getAllCauseCategories(pageRequest);
+        Page<AttributeGroupDto> result = attributeGroupService.getAllAttributeGroups(pageRequest);
         return ApiResponse.builder()
                 .message("Success")
                 .data(result.getContent())
@@ -65,25 +60,24 @@ public class CauseCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteCauseCategory(@PathVariable("id") Long id) {
-        causeCategoryService.deleteCauseCategory(id);
+    public ApiResponse<Void> deleteAttributeGroup(@PathVariable("id") Long id) {
+        attributeGroupService.deleteAttributeGroup(id);
         return ApiResponse.<Void>builder()
                 .message("Deleted successfully")
                 .build();
     }
 
     @GetMapping("/search")
-    public ApiResponse<?> searchCauseCategory(
+    public ApiResponse<?> searchAttributeGroup(
             @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "systemId", required = false) Long systemId,
+            @RequestParam(value = "isActive", required = false) Boolean isActive,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
-    )
-    {
+    ) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<CauseCategoryDto> result = causeCategoryService.searchCauseCategories(code, systemId, pageRequest);
-        return ApiResponse.builder()
+        Page<AttributeGroupDto> result = attributeGroupService.searchByKeyWord(code, isActive, pageRequest);
+        return  ApiResponse.builder()
                 .message("Success")
                 .data(result.getContent())
                 .size((long) result.getSize())
@@ -94,7 +88,7 @@ public class CauseCategoryController {
                 .page((long) result.getNumber())
                 .build();
 
-    }
 
+    }
 
 }

@@ -70,14 +70,13 @@ public class CauseCategoryServiceImpl implements CauseCategoryService {
     }
 
     @Override
-    public Page<CauseCategoryDto> getAllCauseCategories( PageRequest pageRequest) {
+    public Page<CauseCategoryDto> getAllCauseCategories(PageRequest pageRequest) {
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
         Page<CauseCategory> causeCategories = causeCategoryRepository.findAll(pageable);
         if (!causeCategories.isEmpty()) {
             return causeCategories.map(causeCategoryMapper::mapToDto);
-        }
-        else
+        } else
             return null;
 
     }

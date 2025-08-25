@@ -17,11 +17,11 @@ public interface CauseRepository  extends JpaRepository<Cause,Long> {
             "OR LOWER(c.code) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
             "AND (:type IS NULL OR c.type = :type) " +
             "AND (:origin IS NULL OR c.origin = :origin) " +
-            "AND (:isStatus IS NULL OR c.isActive = :isStatus)")
+            "AND (:isActive IS NULL OR c.isActive = :isActive)")
     Page<Cause> search(
             @Param("keyword") String keyword,
-            @Param("type") String type,
-            @Param("origin") String origin,
+            @Param("type") TypeERM type,
+            @Param("origin") Origin origin,
             @Param("isActive") Boolean isActive,
             Pageable pageable
     );

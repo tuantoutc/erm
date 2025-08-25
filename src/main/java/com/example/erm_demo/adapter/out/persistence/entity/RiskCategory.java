@@ -11,12 +11,12 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 @Entity
-@Table(name = "cause_categories")
+@Table(name = "risk_categories")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CauseCategory {
+public class RiskCategory {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -25,22 +25,20 @@ public class CauseCategory {
     String code;
     @Column(unique = true)
     String name;
-    @Lob /// (Large Object) báo cho JPA biết đây là trường dữ liệu lớn.
-    @Column(columnDefinition = "TEXT")
-    String description;
     @Lob
     @Column(columnDefinition = "TEXT")
-    String note;
+    String description;
 
-    @OneToMany(
-        mappedBy = "causeCategory",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    List<Cause> causes;
+    @Column(name = "is_active")
+    Boolean isActive;
 
-    @OneToMany(mappedBy = "causeCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<CauseCategoryMap> causeCategoryMaps;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id")
+    RiskCategory parent;
+
+    @OneToMany(mappedBy = "riskCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    List<RiskCategoryMap> riskCategoryMaps;
+
 
 
 }

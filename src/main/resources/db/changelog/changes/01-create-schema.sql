@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `attribute_groups` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `code`                   varchar(50)   UNIQUE,
   `name`                   varchar(50)   UNIQUE,
-  `type`                   varchar(50),
+  `source_type`            varchar(50),
   `description`            text,
   `is_active`              boolean
 );
@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS `attributes` (
   `code`                   varchar(50)   UNIQUE,
   `name`                   varchar(50)   UNIQUE,
   `display_type`           nvarchar(50),
-  `datatype`               varchar(50),
+  `data_type`               varchar(50),
+  `source_type`            varchar(50),
   `attribute_group_id`     bigint,
   `description`            text,
   `is_active`              boolean

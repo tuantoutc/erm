@@ -1,7 +1,6 @@
 package com.example.erm_demo.adapter.in.rest.controller;
 
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
-import com.example.erm_demo.adapter.in.rest.dto.CauseCategoryDto;
 import com.example.erm_demo.adapter.in.rest.dto.CauseDto;
 import com.example.erm_demo.application.service.CauseService;
 import com.example.erm_demo.domain.enums.Origin;
@@ -73,8 +72,8 @@ public class CauseController {
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<CauseDto> result = causeService.searchByKeyWord(pageRequest, code, type, origin, isActive);
-        ApiResponse response = ApiResponse.builder()
+        Page<CauseDto> result = causeService.searchByKeyWord( code, type, origin, isActive, pageRequest);
+        return ApiResponse.builder()
                 .message("Success")
                 .data(result.getContent())
                 .size((long) result.getSize())
@@ -85,7 +84,6 @@ public class CauseController {
                 .page((long) result.getNumber())
                 .build();
 
-        return response;
     }
 
 }

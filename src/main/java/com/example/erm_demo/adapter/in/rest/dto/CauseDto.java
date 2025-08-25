@@ -21,11 +21,14 @@ public class CauseDto {
     String code;
     @NotNull
     String name;
+    @NonNull
     TypeERM type; //  Sự cố, rủi ro
+    @NotNull
     Origin origin; // Enum thay vì String
     String description; // Mô tả
     String note;
     Boolean isActive;
+    @NotNull
     CauseCategoryDto causeCategoryDto;
     List<SystemDto> systemDtos;
 }

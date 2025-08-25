@@ -1,57 +1,52 @@
 package com.example.erm_demo.adapter.in.rest.controller;
 
-
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
-import com.example.erm_demo.adapter.in.rest.dto.CauseCategoryDto;
-import com.example.erm_demo.application.service.CauseCategoryService;
+import com.example.erm_demo.adapter.in.rest.dto.RiskCategoryDto;
+import com.example.erm_demo.application.service.RiskCategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-@RequestMapping("/cause-category")
+@RequestMapping("/risk-category")
 @RequiredArgsConstructor
-public class CauseCategoryController {
+public class RiskCategoryController {
 
-
-    private final CauseCategoryService causeCategoryService;
+    private final RiskCategoryService riskCategoryService;
 
     @PostMapping
-    public ApiResponse<CauseCategoryDto> createCauseCategory(@RequestBody @Valid CauseCategoryDto dto) {
+    public ApiResponse<RiskCategoryDto> createRiskCategory(@RequestBody @Valid RiskCategoryDto dto) {
 
-        return ApiResponse.<CauseCategoryDto>builder()
+        return ApiResponse.<RiskCategoryDto>builder()
                 .message("Success")
-                .data(causeCategoryService.createCauseCategory(dto))
+                .data(riskCategoryService.createRiskCategory(dto))
                 .build();
     }
 
     @PutMapping
-    public ApiResponse<CauseCategoryDto> updateCauseCategory(@RequestBody @Valid CauseCategoryDto dto) {
+    public ApiResponse<RiskCategoryDto> updateRiskCategory(@RequestBody @Valid RiskCategoryDto dto) {
 
-        return ApiResponse.<CauseCategoryDto>builder()
+        return ApiResponse.<RiskCategoryDto>builder()
                 .message("Success")
-                .data(causeCategoryService.updateCauseCategory(dto))
+                .data(riskCategoryService.updateRiskCategory(dto))
                 .build();
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<CauseCategoryDto> getCauseCategoryById(@PathVariable("id") Long id) {
-
-
-        return ApiResponse.<CauseCategoryDto>builder()
+    public ApiResponse<RiskCategoryDto> getRiskCategoryById(@PathVariable("id") Long id) {
+        return ApiResponse.<RiskCategoryDto>builder()
                 .message("Success")
-                .data(causeCategoryService.getCauseCategoryById(id))
+                .data(riskCategoryService.getRiskCategoryById(id))
                 .build();
     }
 
     @GetMapping()
-    public ApiResponse<?> getAllCauseCategory( @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                    @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ApiResponse<?> getAllRiskCategory( @RequestParam(value = "page", defaultValue = "0") int page,
+                                               @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<CauseCategoryDto> result = causeCategoryService.getAllCauseCategories(pageRequest);
+        Page<RiskCategoryDto> result = riskCategoryService.getAllRiskCategories(pageRequest);
         return ApiResponse.builder()
                 .message("Success")
                 .data(result.getContent())
@@ -65,25 +60,24 @@ public class CauseCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteCauseCategory(@PathVariable("id") Long id) {
-        causeCategoryService.deleteCauseCategory(id);
+    public ApiResponse<Void> deleteRiskCategory(@PathVariable("id") Long id) {
+        riskCategoryService.deleteRiskCategory(id);
         return ApiResponse.<Void>builder()
                 .message("Deleted successfully")
                 .build();
     }
-
     @GetMapping("/search")
-    public ApiResponse<?> searchCauseCategory(
+    public ApiResponse<?> searchRiskCategory(
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "systemId", required = false) Long systemId,
+            @RequestParam(value = "isActive", required = false) Boolean isActive,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
-    )
-    {
+    ) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<CauseCategoryDto> result = causeCategoryService.searchCauseCategories(code, systemId, pageRequest);
-        return ApiResponse.builder()
+        Page<RiskCategoryDto> result = riskCategoryService.searchByKeyWord( code, systemId, isActive,  pageRequest);
+        return   ApiResponse.builder()
                 .message("Success")
                 .data(result.getContent())
                 .size((long) result.getSize())
@@ -95,6 +89,5 @@ public class CauseCategoryController {
                 .build();
 
     }
-
 
 }
