@@ -1,7 +1,7 @@
 package com.example.erm_demo.application.service.impl;
 
 import com.example.erm_demo.adapter.in.rest.dto.RiskCategoryDto;
-import com.example.erm_demo.adapter.out.persistence.entity.RiskCategory;
+import com.example.erm_demo.adapter.out.persistence.entity.RiskCategoryEntity;
 import com.example.erm_demo.adapter.out.persistence.mapper.RiskCategoryMapper;
 import com.example.erm_demo.adapter.out.persistence.repository.RiskCategoryRepository;
 import com.example.erm_demo.application.service.RiskCategoryService;
@@ -33,7 +33,7 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
         if (!riskCategoryRepository.existsById(id)) {
             throw new AppException(ErrorCode.ENTITY_NOT_FOUND);
         }
-        RiskCategory entity = riskCategoryRepository.findById(id).get();
+        RiskCategoryEntity entity = riskCategoryRepository.findById(id).get();
         return riskCategoryMapper.maptoRiskCategoryDto(entity);
 
     }
@@ -44,13 +44,13 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
         if (dto.getId() != null) {
             throw new AppException(ErrorCode.ID_MUST_BE_NULL);
         }
-        RiskCategory riskCategory = riskCategoryMapper.maptoRiskCategory(dto);
+        RiskCategoryEntity riskCategoryEntity = riskCategoryMapper.maptoRiskCategory(dto);
         if (dto.getParent() != null) {
-            RiskCategory parent = riskCategoryRepository.findById(dto.getParent().getId())
+            RiskCategoryEntity parent = riskCategoryRepository.findById(dto.getParent().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-            riskCategory.setParent(parent);
+            riskCategoryEntity.setParent(parent);
         }
-        return riskCategoryMapper.maptoRiskCategoryDto(riskCategoryRepository.save(riskCategory));
+        return riskCategoryMapper.maptoRiskCategoryDto(riskCategoryRepository.save(riskCategoryEntity));
     }
 
     @Override
@@ -59,7 +59,7 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
         if (dto.getId() == null) {
             throw new AppException(ErrorCode.ID_CANNOT_NULL);
         }
-        RiskCategory entity = riskCategoryRepository.findById(dto.getId())
+        RiskCategoryEntity entity = riskCategoryRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
         entity.setParent(null);
         entity = riskCategoryMapper.updateRiskCategory(entity, dto);
@@ -69,7 +69,7 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
             if (dto.getParent().getId() != null && dto.getParent().getId().equals(dto.getId())) {
                 throw new AppException(ErrorCode.PARENT_CANNOT_BE_SELF);
             }
-            RiskCategory parent = riskCategoryRepository.findById(dto.getParent().getId())
+            RiskCategoryEntity parent = riskCategoryRepository.findById(dto.getParent().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
             entity.setParent(parent);
         }
@@ -93,7 +93,7 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
 
-        Page<RiskCategory> riskCategories = riskCategoryRepository.searchBy(code, systemId, isActive, pageable);
+        Page<RiskCategoryEntity> riskCategories = riskCategoryRepository.searchBy(code, systemId, isActive, pageable);
 
         return riskCategories.map(riskCategoryMapper::maptoRiskCategoryDto);
     }
@@ -103,7 +103,7 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
 
-        Page<RiskCategory> riskCategories = riskCategoryRepository.findAll(pageable);
+        Page<RiskCategoryEntity> riskCategories = riskCategoryRepository.findAll(pageable);
         return riskCategories.map(riskCategoryMapper::maptoRiskCategoryDto);
     }
 }

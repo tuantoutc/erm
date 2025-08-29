@@ -1,7 +1,6 @@
 package com.example.erm_demo.adapter.out.persistence.entity;
 
 
-import com.example.erm_demo.domain.enums.SourceType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,12 +11,12 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 @Entity
-@Table(name = "attribute_groups")
+@Table(name = "cause_categories")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AttributeGroup {
+public class CauseCategoryEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -26,20 +25,14 @@ public class AttributeGroup {
     String code;
     @Column(unique = true)
     String name;
-
-    @Column(name ="source_type")
-    SourceType sourceType;
-
-    @Lob
+    @Lob /// (Large Object) báo cho JPA biết đây là trường dữ liệu lớn.
     @Column(columnDefinition = "TEXT")
     String description;
-    @Column(name = "is_active")
-    Boolean isActive;
+    @Lob
+    @Column(columnDefinition = "TEXT")
+    String note;
 
-    @OneToMany(
-            mappedBy = "attributeGroup",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    List<Attribute> attributes;
+//    Đã loại bỏ các trường quan hệ - sẽ quản lý thủ công qua Repository
+//    List<CauseEntity> causeEntities;
+//    List<CauseCategoryMapEntity> causeCategoryMapEntities;
 }

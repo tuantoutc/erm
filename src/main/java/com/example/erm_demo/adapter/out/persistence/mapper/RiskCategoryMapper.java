@@ -3,9 +3,8 @@ package com.example.erm_demo.adapter.out.persistence.mapper;
 
 import com.example.erm_demo.adapter.in.rest.dto.RiskCategoryDto;
 import com.example.erm_demo.adapter.in.rest.dto.SystemDto;
-import com.example.erm_demo.adapter.out.persistence.entity.RiskCategory;
-import com.example.erm_demo.adapter.out.persistence.entity.RiskCategoryMap;
-import com.example.erm_demo.adapter.out.persistence.repository.RiskCategoryMapRepository;
+import com.example.erm_demo.adapter.out.persistence.entity.RiskCategoryEntity;
+import com.example.erm_demo.adapter.out.persistence.entity.RiskCategoryMapEntity;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -18,20 +17,20 @@ public class RiskCategoryMapper {
 
     private final ModelMapper modelMapper;
 
-    public RiskCategory maptoRiskCategory(RiskCategoryDto dto){
-        RiskCategory entity = modelMapper.map(dto, RiskCategory.class);
+    public RiskCategoryEntity maptoRiskCategory(RiskCategoryDto dto){
+        RiskCategoryEntity entity = modelMapper.map(dto, RiskCategoryEntity.class);
         entity.setId(null);
         setRiskCategoryMapSystemFromDto(entity,dto);
         return entity;
     }
-    public RiskCategory updateRiskCategory(RiskCategory entity,RiskCategoryDto dto){
-        entity.getRiskCategoryMaps().clear();
-        entity = modelMapper.map(dto, RiskCategory.class);
+    public RiskCategoryEntity updateRiskCategory(RiskCategoryEntity entity, RiskCategoryDto dto){
+        entity.getRiskCategoryMapEntities().clear();
+        entity = modelMapper.map(dto, RiskCategoryEntity.class);
         setRiskCategoryMapSystemFromDto(entity,dto);
         return entity;
     }
 
-    public  RiskCategoryDto maptoRiskCategoryDto(RiskCategory entity){
+    public  RiskCategoryDto maptoRiskCategoryDto(RiskCategoryEntity entity){
 
         RiskCategoryDto dto = modelMapper.map(entity, RiskCategoryDto.class);
         if(entity.getParent()!=null){
@@ -43,10 +42,10 @@ public class RiskCategoryMapper {
             dto.setParent(parent);
         }
 
-        if(entity.getRiskCategoryMaps() != null){
-            List<SystemDto> systemDtos = entity.getRiskCategoryMaps().stream().map(riskCategoryMap -> {
+        if(entity.getRiskCategoryMapEntities() != null){
+            List<SystemDto> systemDtos = entity.getRiskCategoryMapEntities().stream().map(riskCategoryMapEntity -> {
                 SystemDto systemDto = SystemDto.builder()
-                        .id(riskCategoryMap.getSystemId())
+                        .id(riskCategoryMapEntity.getSystemId())
                         .build();
                 return systemDto;
             }).toList();
@@ -56,20 +55,20 @@ public class RiskCategoryMapper {
         return dto;
     }
 
-    private void setRiskCategoryMapSystemFromDto( RiskCategory entity, RiskCategoryDto dto){
+    private void setRiskCategoryMapSystemFromDto(RiskCategoryEntity entity, RiskCategoryDto dto){
 
         if(dto.getSystemDtos() != null && !dto.getSystemDtos().isEmpty()){
-            List<RiskCategoryMap> riskCategoryMaps = dto.getSystemDtos().stream().map(systemDto -> {
-                RiskCategoryMap riskCategoryMap = RiskCategoryMap.builder()
+            List<RiskCategoryMapEntity> riskCategoryMapEntities = dto.getSystemDtos().stream().map(systemDto -> {
+                RiskCategoryMapEntity riskCategoryMapEntity = RiskCategoryMapEntity.builder()
                         .systemId(systemDto.getId())
-                        .riskCategory(entity)
+                        .riskCategoryEntity(entity)
                         .build();
-                return riskCategoryMap;
+                return riskCategoryMapEntity;
             }).toList();
-            entity.setRiskCategoryMaps(riskCategoryMaps);
+            entity.setRiskCategoryMapEntities(riskCategoryMapEntities);
         }
         else {
-            entity.setRiskCategoryMaps(null);
+            entity.setRiskCategoryMapEntities(null);
         }
 
     }

@@ -1,13 +1,14 @@
 package com.example.erm_demo.adapter.out.persistence.mapper;
 
 
-import com.example.erm_demo.adapter.in.rest.dto.CauseCategoryDto;
 import com.example.erm_demo.adapter.in.rest.dto.CauseDto;
 import com.example.erm_demo.adapter.in.rest.dto.SystemDto;
-import com.example.erm_demo.adapter.out.persistence.entity.Cause;
-import com.example.erm_demo.adapter.out.persistence.entity.CauseCategory;
-import com.example.erm_demo.adapter.out.persistence.entity.CauseMap;
+import com.example.erm_demo.adapter.out.persistence.entity.CauseEntity;
+import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryEntity;
+import com.example.erm_demo.adapter.out.persistence.entity.CauseMapEntity;
 import com.example.erm_demo.adapter.out.persistence.repository.CauseCategoryRepository;
+import com.example.erm_demo.adapter.out.persistence.repository.CauseMapRepository;
+import com.example.erm_demo.adapter.out.persistence.repository.CauseRepository;
 import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.exception.AppException;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+
 @Component
 @AllArgsConstructor
 public class CauseMapper {
@@ -23,57 +25,45 @@ public class CauseMapper {
     private final ModelMapper modelMapper;
     private final CauseCategoryMapper causeCategoryMapper;
     private final CauseCategoryRepository causeCategoryRepository;
+    private final CauseMapRepository causeMapRepository;
 
 
-    public Cause maptoCause(CauseDto dto) {
-        Cause entity = modelMapper.map(dto, Cause.class);
-        entity.setId(null);
-        setCauseMapSystemFromDto(entity, dto);
-        return entity;
-    }
-
-    public Cause mapUpdateCause(Cause entity, CauseDto dto) {
-        entity.getCauseMaps().clear();
-        entity = modelMapper.map(dto, Cause.class);
-
-        setCauseMapSystemFromDto(entity, dto);
-        return entity;
-    }
-
-    public CauseDto mapToCauseDto(Cause entity) {
+    public CauseDto mapToCauseDto(CauseEntity entity) {
         CauseDto causeDto = modelMapper.map(entity, CauseDto.class);
-        if (entity.getCauseMaps() != null) {
-            List<SystemDto> systemDtos = entity.getCauseMaps().stream().map(causeMap -> {
-                SystemDto systemDto = SystemDto.builder()
-                        .id(causeMap.getSystemId())
+        CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(entity.getCauseCategoryId())
+                .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
+        causeDto.setCauseCategoryDto(causeCategoryMapper.mapToDto(causeCategoryEntity));
+
+        List<CauseMapEntity> causeMapEntities = causeMapRepository.findByCauseId(entity.getId());
+        if (causeMapEntities != null && !causeMapEntities.isEmpty()) {
+            List<SystemDto> systemDtos = causeMapEntities.stream().map(item -> {
+                return SystemDto.builder()
+                        .id(item.getSystemId())
                         .build();
-                return systemDto;
             }).toList();
             causeDto.setSystemDtos(systemDtos);
         }
-        CauseCategoryDto causeCategoryDto = causeCategoryMapper.mapToDto(entity.getCauseCategory());
-        causeDto.setCauseCategoryDto(causeCategoryDto);
         return causeDto;
     }
 
-    private void setCauseMapSystemFromDto(Cause entity, CauseDto dto) {
-        CauseCategory category = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
-                .orElseThrow(()-> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-        if (category != null) entity.setCauseCategory(category);
-
-        if (dto.getSystemDtos() != null && !dto.getSystemDtos().isEmpty()) {
-            List<CauseMap> causeMaps = dto.getSystemDtos().stream().map(systemDto -> {
-                CauseMap causeMap = CauseMap.builder()
-                        .systemId(systemDto.getId())
-                        .cause(entity)
-                        .build();
-                return causeMap;
-            }).toList();
-            entity.setCauseMaps(causeMaps);
-        } else {
-            entity.setCauseMaps(null);
-        }
-    }
+//    private void setCauseMapSystemFromDto(CauseEntity entity, CauseDto dto) {
+//        CauseCategoryEntity category = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
+//                .orElseThrow(()-> new AppException(ErrorCode.ENTITY_NOT_FOUND));
+//        if (category != null) entity.setCauseCategoryEntity(category);
+//
+//        if (dto.getSystemDtos() != null && !dto.getSystemDtos().isEmpty()) {
+//            List<CauseMapEntity> causeMapEntities = dto.getSystemDtos().stream().map(systemDto -> {
+//                CauseMapEntity causeMapEntity = CauseMapEntity.builder()
+//                        .systemId(systemDto.getId())
+//                        .causeEntity(entity)
+//                        .build();
+//                return causeMapEntity;
+//            }).toList();
+//            entity.setCauseMapEntities(causeMapEntities);
+//        } else {
+//            entity.setCauseMapEntities(null);
+//        }
+//    }
 
 }
 

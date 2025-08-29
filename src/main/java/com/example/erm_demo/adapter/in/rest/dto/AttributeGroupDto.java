@@ -2,10 +2,10 @@ package com.example.erm_demo.adapter.in.rest.dto;
 
 
 import com.example.erm_demo.domain.enums.SourceType;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
 
 @Data
 @Builder
@@ -15,9 +15,8 @@ import java.util.List;
 public class AttributeGroupDto {
 
     Long id;
-
     String code;
-    @NonNull
+    @NotNull
     String name;
     SourceType sourceType;
     String description;

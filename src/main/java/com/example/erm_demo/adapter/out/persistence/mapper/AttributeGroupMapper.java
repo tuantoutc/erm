@@ -2,7 +2,7 @@ package com.example.erm_demo.adapter.out.persistence.mapper;
 
 
 import com.example.erm_demo.adapter.in.rest.dto.AttributeGroupDto;
-import com.example.erm_demo.adapter.out.persistence.entity.AttributeGroup;
+import com.example.erm_demo.adapter.out.persistence.entity.AttributeGroupEntity;
 import com.example.erm_demo.domain.enums.SourceType;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -15,8 +15,8 @@ public class AttributeGroupMapper {
 
     private final ModelMapper modelMapper;
 
-    public AttributeGroup maptoAttributeGroup(AttributeGroupDto dto){
-        AttributeGroup entity = modelMapper.map(dto, AttributeGroup.class);
+    public AttributeGroupEntity maptoAttributeGroup(AttributeGroupDto dto){
+        AttributeGroupEntity entity = modelMapper.map(dto, AttributeGroupEntity.class);
         entity.setId(null);
 
         // Kiểm tra nếu dto có SourceType = SYSTEM thì set SYSTEM, ngược lại set BUSINESS
@@ -28,8 +28,8 @@ public class AttributeGroupMapper {
         return entity;
     }
 
-    public AttributeGroup updateAttributeGroup(AttributeGroup entity, AttributeGroupDto dto){
-        entity = modelMapper.map(dto, AttributeGroup.class);
+    public AttributeGroupEntity updateAttributeGroup(AttributeGroupEntity entity, AttributeGroupDto dto){
+        entity = modelMapper.map(dto, AttributeGroupEntity.class);
 
         // Kiểm tra nếu dto có SourceType = SYSTEM thì set SYSTEM, ngược lại set BUSINESS
         if(dto.getSourceType() != null && dto.getSourceType().equals(SourceType.SYSTEM)){
@@ -40,7 +40,7 @@ public class AttributeGroupMapper {
         return entity;
     }
 
-    public  AttributeGroupDto maptoAttributeGroupDto(AttributeGroup entity){
+    public  AttributeGroupDto maptoAttributeGroupDto(AttributeGroupEntity entity){
 
         return modelMapper.map(entity, AttributeGroupDto.class);
     }

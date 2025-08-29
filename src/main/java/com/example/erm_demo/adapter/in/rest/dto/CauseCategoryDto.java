@@ -21,6 +21,5 @@ public class CauseCategoryDto {
     String name;
     String description; // Mô tả
     String note;
-    @Builder.Default
-    List<SystemDto> systemDtos = new ArrayList<>(); // ID của hệ thống mà loại nguyên nhân này thuộc về
+    List<SystemDto> systemDtos ;
 }

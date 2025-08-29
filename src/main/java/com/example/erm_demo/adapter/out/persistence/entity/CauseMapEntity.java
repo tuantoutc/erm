@@ -5,20 +5,19 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "risk_categories_map")
+@Table(name = "causes_map")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class RiskCategoryMap {
+public class CauseMapEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "risk_category_id", nullable = false)
-    RiskCategory riskCategory;
+    @Column(name = "cause_id", nullable = false)
+    Long causeId;
 
     @Column(name = "system_id", nullable = false)
     Long systemId;

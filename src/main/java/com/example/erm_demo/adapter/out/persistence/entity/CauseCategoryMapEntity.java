@@ -12,15 +12,14 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class CauseCategoryMap {
+public class CauseCategoryMapEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cause_categories_id", nullable = false)
-    CauseCategory causeCategory;
+    @Column(name = "cause_category_id", nullable = false)
+    Long causeCategoryId;
     @Column(name = "system_id", nullable = false)
     Long systemId;
 

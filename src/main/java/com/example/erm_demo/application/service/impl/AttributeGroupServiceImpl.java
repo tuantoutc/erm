@@ -1,8 +1,7 @@
 package com.example.erm_demo.application.service.impl;
 
 import com.example.erm_demo.adapter.in.rest.dto.AttributeGroupDto;
-import com.example.erm_demo.adapter.out.persistence.entity.AttributeGroup;
-import com.example.erm_demo.adapter.out.persistence.entity.RiskCategory;
+import com.example.erm_demo.adapter.out.persistence.entity.AttributeGroupEntity;
 import com.example.erm_demo.adapter.out.persistence.mapper.AttributeGroupMapper;
 import com.example.erm_demo.adapter.out.persistence.repository.AttributeGroupRepository;
 import com.example.erm_demo.application.service.AttributeGroupService;
@@ -31,8 +30,8 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
         if (dto.getId() != null) {
             throw new AppException(ErrorCode.ID_MUST_BE_NULL);
         }
-        AttributeGroup attributeGroup = attributeGroupMapper.maptoAttributeGroup(dto);
-        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupRepository.save(attributeGroup));
+        AttributeGroupEntity attributeGroupEntity = attributeGroupMapper.maptoAttributeGroup(dto);
+        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupRepository.save(attributeGroupEntity));
     }
 
     @Override
@@ -43,7 +42,7 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
         }
 
         // Kiểm tra entity có tồn tại không
-        AttributeGroup existingEntity = attributeGroupRepository.findById(dto.getId())
+        AttributeGroupEntity existingEntity = attributeGroupRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
 
         // Chỉ cho phép cập nhật nếu SourceType là BUSINESS
@@ -51,8 +50,8 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
             throw new AppException(ErrorCode.SYSTEM_COMPONENT_NOT_MODIFIABLE);
         }
 
-        AttributeGroup attributeGroup = attributeGroupMapper.updateAttributeGroup(existingEntity, dto);
-        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupRepository.save(attributeGroup));
+        AttributeGroupEntity attributeGroupEntity = attributeGroupMapper.updateAttributeGroup(existingEntity, dto);
+        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupRepository.save(attributeGroupEntity));
     }
 
     @Override
@@ -60,9 +59,9 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
         if (id == null) {
             throw new AppException(ErrorCode.ID_CANNOT_NULL);
         }
-        AttributeGroup attributeGroup = attributeGroupRepository.findById(id)
+        AttributeGroupEntity attributeGroupEntity = attributeGroupRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroup);
+        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupEntity);
     }
 
     @Override
@@ -73,7 +72,7 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
         }
 
         // Kiểm tra entity có tồn tại và có SourceType là BUSINESS không
-        AttributeGroup existingEntity = attributeGroupRepository.findById(id)
+        AttributeGroupEntity existingEntity = attributeGroupRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
 
         if (!existingEntity.getSourceType().equals(SourceType.BUSINESS)) {
@@ -89,7 +88,7 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sort);
 
-        Page<AttributeGroup> attributeGroups = attributeGroupRepository.searchBy(code, isActive, pageable);
+        Page<AttributeGroupEntity> attributeGroups = attributeGroupRepository.searchBy(code, isActive, pageable);
         return attributeGroups.map(attributeGroupMapper::maptoAttributeGroupDto);
     }
 
@@ -98,7 +97,7 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
         Sort sort = Sort.by(Sort.Direction.ASC, "id");
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sort);
 
-        Page<AttributeGroup> attributeGroupPage = attributeGroupRepository.findAll(pageable);
+        Page<AttributeGroupEntity> attributeGroupPage = attributeGroupRepository.findAll(pageable);
 
         return attributeGroupPage.map(attributeGroupMapper::maptoAttributeGroupDto);
     }
