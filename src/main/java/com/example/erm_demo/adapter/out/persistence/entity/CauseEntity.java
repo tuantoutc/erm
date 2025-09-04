@@ -26,7 +26,6 @@ public class CauseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     TypeERM type; //  Sự cố, rủi ro
-
     @Enumerated(EnumType.STRING)
     @Column(name = "origin")
     Origin origin; // Bên ngoài, nội bộ
