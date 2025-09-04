@@ -12,5 +12,4 @@ public class AttributeValueDto {
 
     Long id;
     String value;
-    AttributeDto attribute;
 }

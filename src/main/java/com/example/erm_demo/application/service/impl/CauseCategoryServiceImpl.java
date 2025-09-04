@@ -14,7 +14,6 @@ import com.example.erm_demo.application.service.CauseCategoryService;
 import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.exception.AppException;
 import com.example.erm_demo.util.ApiResponseUtil;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -23,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -72,6 +72,7 @@ public class CauseCategoryServiceImpl implements CauseCategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CauseCategoryDto getCauseCategoryById(Long id) {
         return causeCategoryRepository.findById(id)
                 .map(causeCategoryMapper::mapToDto)
@@ -92,7 +93,7 @@ public class CauseCategoryServiceImpl implements CauseCategoryService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ApiResponse<PageResponseDto<CauseCategoryDto>> searchCauseCategories(String code, Long systemId, PageRequest pageRequest) {
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);

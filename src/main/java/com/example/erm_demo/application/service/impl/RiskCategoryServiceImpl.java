@@ -13,7 +13,6 @@ import com.example.erm_demo.application.service.RiskCategoryService;
 import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.exception.AppException;
 import com.example.erm_demo.util.ApiResponseUtil;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -22,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -38,6 +38,7 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public RiskCategoryDto getRiskCategoryById(Long id) {
         return riskCategoryRepository.findById(id)
                 .map(riskCategoryMapper::maptoRiskCategoryDto)
@@ -106,6 +107,7 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ApiResponse<PageResponseDto<RiskCategoryDto>> searchRiskCategories(String code, Long systemId, Boolean isActive, PageRequest pageRequest) {
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);

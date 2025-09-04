@@ -10,8 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PageResponseDto<T> {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     List<T> content;
     Long page;
     Long size;

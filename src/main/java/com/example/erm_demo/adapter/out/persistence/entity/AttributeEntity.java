@@ -21,14 +21,19 @@ public class AttributeEntity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long id;
+
     @Column(unique = true)
     String code;
+
     @Column(unique = true)
     String name;
+
     @Column(name ="display_type")
     String displayType;
+
     @Column(name ="data_type")
     String dataType;
+
     @Column(name ="source_type")
     @Enumerated(EnumType.STRING)
     SourceType sourceType;
@@ -36,6 +41,7 @@ public class AttributeEntity {
     @Lob
     @Column(columnDefinition = "TEXT")
     String description;
+
     @Column(name = "is_active")
     Boolean isActive;
 

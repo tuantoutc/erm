@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface AttributeGroupRepository extends JpaRepository<AttributeGroupEntity, Long> , JpaSpecificationExecutor<AttributeGroupEntity> {
 
+
 }

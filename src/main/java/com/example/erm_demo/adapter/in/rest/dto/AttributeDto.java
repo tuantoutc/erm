@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,13 +18,15 @@ public class AttributeDto {
     String code;
     @NotNull
     String name;
-    String displayType;
-    String dataType;
+    @NotNull
+    String displayType; // Textbox, Selectbox, Radio, Multi-select, Checkbox
+    String dataType; // Date, String, Int, Time, Float (chỉ dùng khi displayType = "Textbox")
     SourceType sourceType;
     String description;
     Boolean isActive;
+    @NotNull
     AttributeGroupDto attributeGroup;
 
-
-
+    // Danh sách các giá trị cho các loại không phải Textbox
+    List<AttributeValueDto> attributeValues;
 }
