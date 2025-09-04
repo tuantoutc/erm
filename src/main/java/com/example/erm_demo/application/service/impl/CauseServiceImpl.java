@@ -1,6 +1,8 @@
 package com.example.erm_demo.application.service.impl;
 
+import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
 import com.example.erm_demo.adapter.in.rest.dto.CauseDto;
+import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseMapEntity;
@@ -8,11 +10,13 @@ import com.example.erm_demo.adapter.out.persistence.mapper.CauseMapper;
 import com.example.erm_demo.adapter.out.persistence.repository.CauseCategoryRepository;
 import com.example.erm_demo.adapter.out.persistence.repository.CauseMapRepository;
 import com.example.erm_demo.adapter.out.persistence.repository.CauseRepository;
+import com.example.erm_demo.adapter.out.persistence.specification.CauseSpecification;
 import com.example.erm_demo.application.service.CauseService;
 import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.enums.Origin;
 import com.example.erm_demo.domain.enums.TypeERM;
 import com.example.erm_demo.domain.exception.AppException;
+import com.example.erm_demo.util.ApiResponseUtil;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,9 +44,6 @@ public class CauseServiceImpl implements CauseService {
 
     @Override
     public CauseDto getCauseById(Long id) {
-        if (id == null) {
-            throw new AppException(ErrorCode.ID_CANNOT_NULL);
-        }
         return causeRepository.findById(id)
                 .map(causeMapper::mapToCauseDto)
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
@@ -51,20 +53,17 @@ public class CauseServiceImpl implements CauseService {
     @Override
     @Transactional
     public CauseDto createCause(CauseDto dto) {
-        if (dto.getId() == null) {
-            CauseEntity causeEntity = new CauseEntity();
+            CauseEntity causeEntity = modelMapper.map(dto, CauseEntity.class);
 
-            mapCauseCategoryToCause(causeEntity, dto);
+            CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
+                .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
+            causeEntity.setCauseCategoryId(causeCategoryEntity.getId());
 
             causeEntity = causeRepository.save(causeEntity);
 
             mapSystemToCause(causeEntity, dto);
 
             return causeMapper.mapToCauseDto(causeRepository.save(causeEntity));
-        }
-        else{
-            throw new AppException(ErrorCode.ID_MUST_BE_NULL);
-        }
     }
     private void mapSystemToCause(CauseEntity entity, CauseDto dto){
         if (dto.getSystemDtos() != null && !dto.getSystemDtos().isEmpty()) {
@@ -79,24 +78,20 @@ public class CauseServiceImpl implements CauseService {
         }
     }
 
-    private void mapCauseCategoryToCause(CauseEntity entity, CauseDto dto){
-        entity = modelMapper.map(dto, CauseEntity.class);
-        CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
-                .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-        entity.setCauseCategoryId(causeCategoryEntity.getId());
-    }
+
 
     @Override
     @Transactional
     public CauseDto updateCause(CauseDto dto) {
-        if (dto.getId() == null) {
-            throw new AppException(ErrorCode.ID_CANNOT_NULL);
-        }
         CauseEntity existingEntity = causeRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
         causeMapRepository.deleteByCauseId(existingEntity.getId());
 
-        mapCauseCategoryToCause(existingEntity, dto);
+        existingEntity = modelMapper.map(dto, CauseEntity.class);
+        CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
+                .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
+        existingEntity.setCauseCategoryId(causeCategoryEntity.getId());
+
 
         existingEntity = causeRepository.save(existingEntity);
 
@@ -108,9 +103,7 @@ public class CauseServiceImpl implements CauseService {
 
     @Override
     public void deleteCause(Long id) {
-        if (id == null) {
-            throw new AppException(ErrorCode.ID_CANNOT_NULL);
-        }
+
         if (!causeRepository.existsById(id)) {
             throw new AppException(ErrorCode.ENTITY_NOT_FOUND);
         }
@@ -118,27 +111,23 @@ public class CauseServiceImpl implements CauseService {
         causeRepository.deleteById(id);
     }
 
-    @Override
-    public List<CauseDto> getAllCauses() {
-        List<CauseEntity> causeEntityList = causeRepository.findAll();
-        if (!causeEntityList.isEmpty()) {
-            return causeEntityList.stream()
-                    .map(causeMapper::mapToCauseDto)
-                    .toList();
-        }
-        return List.of();
-    }
+
 
     @Override
-    public Page<CauseDto> searchByKeyWord(String code, TypeERM type, Origin origin, Boolean isActive, PageRequest pageRequest) {
+    public ApiResponse<PageResponseDto<CauseDto>> searchCauses(String code, Long causeCategoryId, Origin origin, Boolean isActive, PageRequest pageRequest) {
 
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
 
-        Page<CauseEntity> causes = causeRepository.search(code, type, origin, isActive, pageable);
-        return causes.map(causeMapper::mapToCauseDto);
+        Specification<CauseEntity> spec = CauseSpecification.advancedSearchCriteria(code, isActive, causeCategoryId, origin);
 
+        Page<CauseEntity> page = causeRepository.findAll(spec, pageable);
+        Page<CauseDto> causeDtoPage = page.map(causeMapper::mapToCauseDto);
+
+        return  ApiResponseUtil.createPageResponse(causeDtoPage);
     }
+
+
 
 
 }

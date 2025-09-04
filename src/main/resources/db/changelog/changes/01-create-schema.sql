@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `cause_categories` (
 
 CREATE TABLE IF NOT EXISTS `cause_categories_map` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
-  `cause_categories_id`    bigint,
+  `cause_category_id`      bigint,
   `system_id`              bigint
 );
 
@@ -64,8 +64,8 @@ CREATE TABLE IF NOT EXISTS `attributes` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `code`                   varchar(50)   UNIQUE,
   `name`                   varchar(50)   UNIQUE,
-  `display_type`           nvarchar(50),
-  `data_type`               varchar(50),
+  `display_type`           varchar(50),
+  `data_type`              varchar(50),
   `source_type`            varchar(50),
   `attribute_group_id`     bigint,
   `description`            text,

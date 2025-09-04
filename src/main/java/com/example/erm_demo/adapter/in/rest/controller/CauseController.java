@@ -2,16 +2,14 @@ package com.example.erm_demo.adapter.in.rest.controller;
 
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
 import com.example.erm_demo.adapter.in.rest.dto.CauseDto;
+import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import com.example.erm_demo.application.service.CauseService;
 import com.example.erm_demo.domain.enums.Origin;
-import com.example.erm_demo.domain.enums.TypeERM;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/cause")
@@ -38,33 +36,26 @@ public class CauseController {
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<CauseDto> getCauseById(@PathVariable("id") Long id) {
+    @GetMapping()
+    public ApiResponse<CauseDto> getCauseById(@RequestParam("id") Long id) {
         return ApiResponse.<CauseDto>builder()
                 .message("Success")
                 .data(causeService.getCauseById(id))
                 .build();
     }
 
-    @GetMapping()
-    public ApiResponse<List<CauseDto>> getAllCause() {
-        return ApiResponse.<List<CauseDto>>builder()
-                .message("Success")
-                .data(causeService.getAllCauses())
-                .build();
-    }
 
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteCause(@PathVariable("id") Long id) {
+    @DeleteMapping()
+    public ApiResponse<Void> deleteCause(@RequestParam("id") Long id) {
         causeService.deleteCause(id);
         return ApiResponse.<Void>builder()
                 .message("Deleted successfully")
                 .build();
     }
     @GetMapping("/search")
-    public ApiResponse<?> searchCauseCategory(
+    public ApiResponse<PageResponseDto<CauseDto>> searchCause(
             @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "type", required = false) TypeERM type,
+            @RequestParam(value = "causeCategoryId", required = false) Long causeCategoryId,
             @RequestParam(value = "origin", required = false) Origin origin,
             @RequestParam(value = "isActive", required = false) Boolean isActive,
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -72,17 +63,7 @@ public class CauseController {
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<CauseDto> result = causeService.searchByKeyWord( code, type, origin, isActive, pageRequest);
-        return ApiResponse.builder()
-                .message("Success")
-                .data(result.getContent())
-                .size((long) result.getSize())
-                .totalElements(result.getTotalElements())
-                .totalPages((long) result.getTotalPages())
-                .numberOfElements((long) result.getNumberOfElements())
-                .sort(String.valueOf(result.getSort()))
-                .page((long) result.getNumber())
-                .build();
+        return causeService.searchCauses(code, causeCategoryId, origin, isActive, pageRequest);
 
     }
 

@@ -19,7 +19,7 @@ public class RiskCategoryDto {
     String name;
     String description;
     Boolean isActive;
-    RiskCategoryDto parent;
+    RiskCategoryDto  parent;
     List<SystemDto> systemDtos;
 
 }

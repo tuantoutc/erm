@@ -1,12 +1,11 @@
 package com.example.erm_demo.adapter.in.rest.controller;
 
-
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
 import com.example.erm_demo.adapter.in.rest.dto.CauseCategoryDto;
+import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import com.example.erm_demo.application.service.CauseCategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,8 +36,8 @@ public class CauseCategoryController {
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<CauseCategoryDto> getCauseCategoryById(@PathVariable("id") Long id) {
+    @GetMapping()
+    public ApiResponse<CauseCategoryDto> getCauseCategoryById(@RequestParam("id") Long id) {
 
 
         return ApiResponse.<CauseCategoryDto>builder()
@@ -47,25 +46,9 @@ public class CauseCategoryController {
                 .build();
     }
 
-    @GetMapping()
-    public ApiResponse<?> getAllCauseCategory( @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                    @RequestParam(value = "size", defaultValue = "10") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<CauseCategoryDto> result = causeCategoryService.getAllCauseCategories(pageRequest);
-        return ApiResponse.builder()
-                .message("Success")
-                .data(result.getContent())
-                .size((long) result.getSize())
-                .totalElements(result.getTotalElements())
-                .totalPages((long) result.getTotalPages())
-                .numberOfElements((long) result.getNumberOfElements())
-                .sort(String.valueOf(result.getSort()))
-                .page((long) result.getNumber())
-                .build();
-    }
 
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteCauseCategory(@PathVariable("id") Long id) {
+    @DeleteMapping()
+    public ApiResponse<Void> deleteCauseCategory(@RequestParam("id") Long id) {
         causeCategoryService.deleteCauseCategory(id);
         return ApiResponse.<Void>builder()
                 .message("Deleted successfully")
@@ -73,27 +56,14 @@ public class CauseCategoryController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<?> searchCauseCategory(
+    public ApiResponse<PageResponseDto<CauseCategoryDto>> searchCauseCategory(
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "systemId", required = false) Long systemId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
-    )
-    {
+    ) {
         PageRequest pageRequest = PageRequest.of(page, size);
-
-        Page<CauseCategoryDto> result = causeCategoryService.searchCauseCategories(code, systemId, pageRequest);
-        return ApiResponse.builder()
-                .message("Success")
-                .data(result.getContent())
-                .size((long) result.getSize())
-                .totalElements(result.getTotalElements())
-                .totalPages((long) result.getTotalPages())
-                .numberOfElements((long) result.getNumberOfElements())
-                .sort(String.valueOf(result.getSort()))
-                .page((long) result.getNumber())
-                .build();
-
+        return causeCategoryService.searchCauseCategories(code, systemId, pageRequest);
     }
 
 

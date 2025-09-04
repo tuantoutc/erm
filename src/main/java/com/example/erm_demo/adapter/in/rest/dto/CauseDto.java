@@ -25,7 +25,6 @@ public class CauseDto {
     TypeERM type; //  Sự cố, rủi ro
     @NotNull
     Origin origin; // Enum thay vì String
-    String description; // Mô tả
     String note;
     Boolean isActive;
     @NotNull

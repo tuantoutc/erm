@@ -16,11 +16,5 @@ public class ApiResponse <T> {
     String message;
     String traceId;
     T data;
-    Long page;
-    Long size;
-    String sortBy;
-    String sort;
-    Long totalElements;
-    Long totalPages;
-    Long numberOfElements;
+
 }

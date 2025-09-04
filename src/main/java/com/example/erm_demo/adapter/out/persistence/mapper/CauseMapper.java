@@ -1,8 +1,12 @@
 package com.example.erm_demo.adapter.out.persistence.mapper;
 
 
+import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
 import com.example.erm_demo.adapter.in.rest.dto.CauseDto;
+import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import com.example.erm_demo.adapter.in.rest.dto.SystemDto;
+import com.example.erm_demo.adapter.out.feign.client.SystemServiceClient;
+import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryMapEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseMapEntity;
@@ -16,6 +20,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -26,6 +32,7 @@ public class CauseMapper {
     private final CauseCategoryMapper causeCategoryMapper;
     private final CauseCategoryRepository causeCategoryRepository;
     private final CauseMapRepository causeMapRepository;
+    private final SystemServiceClient systemServiceClient;
 
 
     public CauseDto mapToCauseDto(CauseEntity entity) {
@@ -34,36 +41,17 @@ public class CauseMapper {
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
         causeDto.setCauseCategoryDto(causeCategoryMapper.mapToDto(causeCategoryEntity));
 
-        List<CauseMapEntity> causeMapEntities = causeMapRepository.findByCauseId(entity.getId());
-        if (causeMapEntities != null && !causeMapEntities.isEmpty()) {
-            List<SystemDto> systemDtos = causeMapEntities.stream().map(item -> {
-                return SystemDto.builder()
-                        .id(item.getSystemId())
-                        .build();
-            }).toList();
-            causeDto.setSystemDtos(systemDtos);
+        List<CauseMapEntity> listSystem = causeMapRepository.findByCauseId(entity.getId());
+        if (listSystem != null && !listSystem.isEmpty()) {
+            Set<Long> ids = listSystem.stream().map(CauseMapEntity::getSystemId).collect(Collectors.toSet());
+            ApiResponse<PageResponseDto<SystemDto>> response = systemServiceClient.getSystemsByIds(ids, 0, 20);
+            if (response != null && response.getData() != null && response.getData().getContent() != null) {
+                causeDto.setSystemDtos(response.getData().getContent());
+            }
         }
         return causeDto;
     }
 
-//    private void setCauseMapSystemFromDto(CauseEntity entity, CauseDto dto) {
-//        CauseCategoryEntity category = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
-//                .orElseThrow(()-> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-//        if (category != null) entity.setCauseCategoryEntity(category);
-//
-//        if (dto.getSystemDtos() != null && !dto.getSystemDtos().isEmpty()) {
-//            List<CauseMapEntity> causeMapEntities = dto.getSystemDtos().stream().map(systemDto -> {
-//                CauseMapEntity causeMapEntity = CauseMapEntity.builder()
-//                        .systemId(systemDto.getId())
-//                        .causeEntity(entity)
-//                        .build();
-//                return causeMapEntity;
-//            }).toList();
-//            entity.setCauseMapEntities(causeMapEntities);
-//        } else {
-//            entity.setCauseMapEntities(null);
-//        }
-//    }
 
 }
 

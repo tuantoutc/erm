@@ -21,3 +21,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+feign:
+  client:
+    system-service:
+        url: https://uaa-new.dev.apusplatform.com
+  config:
+    default:
+      connect-timeout: 5000
+      read-timeout: 5000
+      logger-level: full

@@ -50,12 +50,7 @@ public class RiskCategoryController {
         return ApiResponse.builder()
                 .message("Success")
                 .data(result.getContent())
-                .size((long) result.getSize())
-                .totalElements(result.getTotalElements())
-                .totalPages((long) result.getTotalPages())
-                .numberOfElements((long) result.getNumberOfElements())
-                .sort(String.valueOf(result.getSort()))
-                .page((long) result.getNumber())
+
                 .build();
     }
 
@@ -80,12 +75,7 @@ public class RiskCategoryController {
         return   ApiResponse.builder()
                 .message("Success")
                 .data(result.getContent())
-                .size((long) result.getSize())
-                .totalElements(result.getTotalElements())
-                .totalPages((long) result.getTotalPages())
-                .numberOfElements((long) result.getNumberOfElements())
-                .sort(String.valueOf(result.getSort()))
-                .page((long) result.getNumber())
+
                 .build();
 
     }

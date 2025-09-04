@@ -1,14 +1,20 @@
 package com.example.erm_demo.application.service.impl;
 
+import com.example.erm_demo.adapter.in.rest.dto.CauseCategoryDto;
 import com.example.erm_demo.adapter.in.rest.dto.RiskCategoryDto;
+import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryEntity;
+import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryMapEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.RiskCategoryEntity;
+import com.example.erm_demo.adapter.out.persistence.entity.RiskCategoryMapEntity;
 import com.example.erm_demo.adapter.out.persistence.mapper.RiskCategoryMapper;
+import com.example.erm_demo.adapter.out.persistence.repository.RiskCategoryMapRepository;
 import com.example.erm_demo.adapter.out.persistence.repository.RiskCategoryRepository;
 import com.example.erm_demo.application.service.RiskCategoryService;
 import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.exception.AppException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +29,10 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
     private final RiskCategoryRepository riskCategoryRepository;
 
     private final RiskCategoryMapper riskCategoryMapper;
+
+    private final ModelMapper modelMapper;
+
+    private final RiskCategoryMapRepository riskCategoryMapRepository;
 
 
     @Override
@@ -41,16 +51,35 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
     @Override
     @Transactional
     public RiskCategoryDto createRiskCategory(RiskCategoryDto dto) {
-        if (dto.getId() != null) {
-            throw new AppException(ErrorCode.ID_MUST_BE_NULL);
+        if (dto.getId() == null) {
+            RiskCategoryEntity entity = modelMapper.map(dto, RiskCategoryEntity.class);
+            if (dto.getParent() != null && dto.getParent().getId() != null) {
+                RiskCategoryEntity parent = riskCategoryRepository.findById(dto.getParent().getId())
+                        .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
+                entity.setParentId(parent.getId());
+            }
+            else entity.setParentId(null);
+
+            entity = riskCategoryRepository.save(entity);
+            mapSystemToRiskCategory(entity, dto);
+
+            return riskCategoryMapper.maptoRiskCategoryDto(entity);
         }
-        RiskCategoryEntity riskCategoryEntity = riskCategoryMapper.maptoRiskCategory(dto);
-        if (dto.getParent() != null) {
-            RiskCategoryEntity parent = riskCategoryRepository.findById(dto.getParent().getId())
-                    .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-            riskCategoryEntity.setParent(parent);
+        else throw new AppException(ErrorCode.ID_MUST_BE_NULL);
+    }
+
+
+    private void mapSystemToRiskCategory(RiskCategoryEntity entity, RiskCategoryDto dto){
+        if (dto.getSystemDtos() != null && !dto.getSystemDtos().isEmpty()) {
+            for (var systemDto : dto.getSystemDtos()) {
+                RiskCategoryMapEntity riskCategoryMapEntity = RiskCategoryMapEntity
+                        .builder()
+                        .systemId(systemDto.getId())
+                        .riskCategoryId(entity.getId())
+                        .build();
+                riskCategoryMapRepository.save(riskCategoryMapEntity);
+            }
         }
-        return riskCategoryMapper.maptoRiskCategoryDto(riskCategoryRepository.save(riskCategoryEntity));
     }
 
     @Override
@@ -61,19 +90,21 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
         }
         RiskCategoryEntity entity = riskCategoryRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-        entity.setParent(null);
-        entity = riskCategoryMapper.updateRiskCategory(entity, dto);
-        if (dto.getParent() != null) {
+        entity = modelMapper.map(dto, RiskCategoryEntity.class);
 
-            // kiêm tra để tránh entity có parent là chính nó
-            if (dto.getParent().getId() != null && dto.getParent().getId().equals(dto.getId())) {
-                throw new AppException(ErrorCode.PARENT_CANNOT_BE_SELF);
-            }
+        riskCategoryMapRepository.deleteByRiskCategoryId(entity.getId());
+
+        if (dto.getParent() != null && dto.getParent().getId() != null) {
             RiskCategoryEntity parent = riskCategoryRepository.findById(dto.getParent().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-            entity.setParent(parent);
+            entity.setParentId(parent.getId());
         }
-        return riskCategoryMapper.maptoRiskCategoryDto(riskCategoryRepository.save(entity));
+        else entity.setParentId(null);
+
+        entity = riskCategoryRepository.save(entity);
+        mapSystemToRiskCategory(entity, dto);
+
+        return riskCategoryMapper.maptoRiskCategoryDto(entity);
     }
 
     @Override
@@ -85,6 +116,9 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
         if (!riskCategoryRepository.existsById(id)) {
             throw new AppException(ErrorCode.ENTITY_NOT_FOUND);
         }
+        // trước khi xóa riskCategory cần xóa các bản ghi trong bảng mapping
+
+        riskCategoryMapRepository.deleteByRiskCategoryId(id);
         riskCategoryRepository.deleteById(id);
     }
 

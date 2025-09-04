@@ -30,10 +30,6 @@ public class CauseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "origin")
     Origin origin; // Bên ngoài, nội bộ
-
-    @Lob /// (Large Object) báo cho JPA biết đây là trường dữ liệu lớn.
-    @Column(columnDefinition = "TEXT")
-    String description;
     @Lob
     @Column(columnDefinition = "TEXT")
     String note;
