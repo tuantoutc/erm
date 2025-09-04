@@ -28,6 +28,7 @@ public class AttributeGroupEntity {
     String name;
 
     @Column(name ="source_type")
+    @Enumerated(EnumType.STRING)
     SourceType sourceType;
 
     @Lob

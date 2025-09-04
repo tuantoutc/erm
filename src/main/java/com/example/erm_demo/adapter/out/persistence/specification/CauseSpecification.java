@@ -38,12 +38,12 @@ public class CauseSpecification {
     //Search criteria mở rộng với nhiều tham số hơn
     public static Specification<CauseEntity> advancedSearchCriteria(
             String keyword,
-            Boolean isActive,
             Long causeCategoryId,
-            Origin origin) {
+            Origin origin,
+            Boolean isActive) {
         return Specification.where(hasKeyword(keyword))
-                .and(hasIsActive(isActive))
                 .and(hasCauseCategoryId(causeCategoryId))
-                .and(hasOrigin(origin));
+                .and(hasOrigin(origin))
+                .and(hasIsActive(isActive));
     }
 }

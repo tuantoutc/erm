@@ -1,18 +1,13 @@
 package com.example.erm_demo.adapter.out.persistence.mapper;
 
 
-import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
-import com.example.erm_demo.adapter.in.rest.dto.CauseDto;
-import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
-import com.example.erm_demo.adapter.in.rest.dto.SystemDto;
+import com.example.erm_demo.adapter.in.rest.dto.*;
 import com.example.erm_demo.adapter.out.feign.client.SystemServiceClient;
-import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryMapEntity;
-import com.example.erm_demo.adapter.out.persistence.entity.CauseEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseCategoryEntity;
+import com.example.erm_demo.adapter.out.persistence.entity.CauseEntity;
 import com.example.erm_demo.adapter.out.persistence.entity.CauseMapEntity;
 import com.example.erm_demo.adapter.out.persistence.repository.CauseCategoryRepository;
 import com.example.erm_demo.adapter.out.persistence.repository.CauseMapRepository;
-import com.example.erm_demo.adapter.out.persistence.repository.CauseRepository;
 import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.exception.AppException;
 import lombok.AllArgsConstructor;
@@ -39,7 +34,12 @@ public class CauseMapper {
         CauseDto causeDto = modelMapper.map(entity, CauseDto.class);
         CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(entity.getCauseCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
-        causeDto.setCauseCategoryDto(causeCategoryMapper.mapToDto(causeCategoryEntity));
+        CauseCategoryDto causeCategoryDto  = CauseCategoryDto.builder()
+                                            .id(causeCategoryEntity.getId())
+                                            .name(causeCategoryEntity.getName())
+                                            .code(causeCategoryEntity.getCode())
+                                            .build();
+        causeDto.setCauseCategoryDto(causeCategoryDto);
 
         List<CauseMapEntity> listSystem = causeMapRepository.findByCauseId(entity.getId());
         if (listSystem != null && !listSystem.isEmpty()) {

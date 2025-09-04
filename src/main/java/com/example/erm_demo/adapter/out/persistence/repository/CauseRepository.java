@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface CauseRepository extends JpaRepository<CauseEntity,Long> , JpaSpecificationExecutor<CauseEntity> {
 
-//    // Tìm kiếm Cause với nhiều tiêu chí
+//     Tìm kiếm Cause với nhiều tiêu chí
 //    @Query("SELECT c FROM CauseEntity c " +
 //            "WHERE (:keyword IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
 //            "OR LOWER(c.code) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +

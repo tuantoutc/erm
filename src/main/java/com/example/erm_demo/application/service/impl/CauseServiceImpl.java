@@ -119,7 +119,7 @@ public class CauseServiceImpl implements CauseService {
         Sort sortBy = Sort.by("id").ascending();
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
 
-        Specification<CauseEntity> spec = CauseSpecification.advancedSearchCriteria(code, isActive, causeCategoryId, origin);
+        Specification<CauseEntity> spec = CauseSpecification.advancedSearchCriteria(code,causeCategoryId, origin, isActive);
 
         Page<CauseEntity> page = causeRepository.findAll(spec, pageable);
         Page<CauseDto> causeDtoPage = page.map(causeMapper::mapToCauseDto);

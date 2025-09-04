@@ -2,6 +2,7 @@ package com.example.erm_demo.adapter.in.rest.controller;
 
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
 import com.example.erm_demo.adapter.in.rest.dto.AttributeGroupDto;
+import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import com.example.erm_demo.application.service.AttributeGroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,28 +35,16 @@ public class AttributeGroupController {
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<AttributeGroupDto> getAttributeGroupById(@PathVariable("id") Long id) {
+    @GetMapping()
+    public ApiResponse<AttributeGroupDto> getAttributeGroupById(@RequestParam("id") Long id) {
         return ApiResponse.<AttributeGroupDto>builder()
                 .message("Success")
                 .data(attributeGroupService.getAttributeGroupById(id))
                 .build();
     }
 
-    @GetMapping()
-    public ApiResponse<?> getAllAttributeGroup(@RequestParam(value = "page", defaultValue = "0") int page,
-                                               @RequestParam(value = "size", defaultValue = "10") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<AttributeGroupDto> result = attributeGroupService.getAllAttributeGroups(pageRequest);
-        return ApiResponse.builder()
-                .message("Success")
-                .data(result.getContent())
-
-                .build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteAttributeGroup(@PathVariable("id") Long id) {
+    @DeleteMapping()
+    public ApiResponse<Void> deleteAttributeGroup(@RequestParam("id") Long id) {
         attributeGroupService.deleteAttributeGroup(id);
         return ApiResponse.<Void>builder()
                 .message("Deleted successfully")
@@ -63,7 +52,7 @@ public class AttributeGroupController {
     }
 
     @GetMapping("/search")
-    public ApiResponse<?> searchAttributeGroup(
+    public ApiResponse<PageResponseDto<AttributeGroupDto>> searchAttributeGroup(
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "isActive", required = false) Boolean isActive,
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -71,14 +60,7 @@ public class AttributeGroupController {
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<AttributeGroupDto> result = attributeGroupService.searchByKeyWord(code, isActive, pageRequest);
-        return  ApiResponse.builder()
-                .message("Success")
-                .data(result.getContent())
-
-                .build();
-
-
+        return attributeGroupService.search(code, isActive, pageRequest);
     }
 
 }

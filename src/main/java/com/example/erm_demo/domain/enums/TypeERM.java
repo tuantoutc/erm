@@ -12,8 +12,8 @@ import java.util.Set;
  */
 @Getter
 public enum TypeERM {
-    RISK("RISK", "Rủi ro", "Risk type"),
-    INCIDENT("INCIDENT", "Sự cố", "Incident type");
+    RISK("RISK", "RISK", "Risk type"),
+    INCIDENT("INCIDENT", "INCIDENT", "Incident type");
 
     private final String code;
     private final String displayName;
@@ -37,11 +37,7 @@ public enum TypeERM {
         this.description = description;
     }
 
-    /**
-     * Tìm enum theo code với tốc độ O(1)
-     * @param code mã code
-     * @return TypeERM enum hoặc null nếu không tìm thấy
-     */
+
     public static TypeERM fromCode(String code) {
         return CODE_MAP.get(code);
     }

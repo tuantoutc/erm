@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface CauseCategoryRepository extends JpaRepository<CauseCategoryEntity,Long>, JpaSpecificationExecutor<CauseCategoryEntity> {
 
-//    // Giữ lại method cũ cho backward compatibility (có thể xóa sau)
+//     Giữ lại method cũ cho backward compatibility (có thể xóa sau)
 //    @Query("SELECT DISTINCT cc FROM CauseCategoryEntity cc " +
 //            "INNER JOIN CauseCategoryMapEntity ccm ON cc.id = ccm.causeCategoryId " +
 //            "WHERE (:keyword IS NULL OR LOWER(cc.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +

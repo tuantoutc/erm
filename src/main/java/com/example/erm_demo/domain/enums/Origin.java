@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Enum cho nguồn gốc (Origin)
@@ -54,7 +55,7 @@ public enum Origin {
      * Lấy tất cả displayName có sẵn
      * @return Set chứa tất cả displayName
      */
-    public static java.util.Set<String> getAllDisplayNames() {
+    public static Set<String> getAllDisplayNames() {
         return DISPLAY_NAME_MAP.keySet();
     }
 

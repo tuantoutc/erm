@@ -148,7 +148,6 @@ public class BaseSpecification {
             if (value == null) {
                 return criteriaBuilder.conjunction(); // Trả về điều kiện true (không lọc)
             }
-
             if (value) {
                 return criteriaBuilder.isTrue(root.get(fieldName));
             } else {
@@ -157,16 +156,4 @@ public class BaseSpecification {
         };
     }
 
-    /**
-     * Tìm kiếm theo null/not null
-     */
-//    public static <T> Specification<T> hasFieldNull(String fieldName) {
-//        return (root, query, criteriaBuilder) ->
-//            criteriaBuilder.isNull(root.get(fieldName));
-//    }
-//
-//    public static <T> Specification<T> hasFieldNotNull(String fieldName) {
-//        return (root, query, criteriaBuilder) ->
-//            criteriaBuilder.isNotNull(root.get(fieldName));
-//    }
 }

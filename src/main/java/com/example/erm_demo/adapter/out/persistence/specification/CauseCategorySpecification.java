@@ -28,9 +28,9 @@ public class CauseCategorySpecification {
     /**
      * Tìm kiếm theo systemId sử dụng JOIN - sử dụng BaseSpecification
      */
-    public static Specification<CauseCategoryEntity> hasSystemIdWithJoin(Long systemId) {
-        return BaseSpecification.hasRelatedIdWithJoin(systemId, "causeCategoryMaps", "systemId");
-    }
+//    public static Specification<CauseCategoryEntity> hasSystemIdWithJoin(Long systemId) {
+//        return BaseSpecification.hasRelatedIdWithJoin(systemId, "causeCategoryMaps", "systemId");
+//    }
 
     /**
      * Specification tổng hợp cho search
@@ -45,23 +45,23 @@ public class CauseCategorySpecification {
     /**
      * Tìm kiếm theo description
      */
-    public static Specification<CauseCategoryEntity> hasDescription(String description) {
-        return BaseSpecification.hasKeywordInField(description, "description");
-    }
+//    public static Specification<CauseCategoryEntity> hasDescription(String description) {
+//        return BaseSpecification.hasKeywordInField(description, "description");
+//    }
 
     /**
      * Tìm kiếm theo note
      */
-    public static Specification<CauseCategoryEntity> hasNote(String note) {
-        return BaseSpecification.hasKeywordInField(note, "note");
-    }
+//    public static Specification<CauseCategoryEntity> hasNote(String note) {
+//        return BaseSpecification.hasKeywordInField(note, "note");
+//    }
 
     /**
      * Tìm kiếm theo code chính xác
      */
-    public static Specification<CauseCategoryEntity> hasExactCode(String code) {
-        return BaseSpecification.hasFieldEqual("code", code);
-    }
+//    public static Specification<CauseCategoryEntity> hasExactCode(String code) {
+//        return BaseSpecification.hasFieldEqual("code", code);
+//    }
 
     /**
      * Search criteria mở rộng với nhiều tham số hơn
@@ -73,7 +73,6 @@ public class CauseCategorySpecification {
             String note) {
         return Specification.where(hasKeyword(keyword))
                            .and(hasSystemId(systemId))
-                           .and(hasDescription(description))
-                           .and(hasNote(note));
+                ;
     }
 }

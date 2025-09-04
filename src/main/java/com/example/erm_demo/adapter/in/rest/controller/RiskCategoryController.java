@@ -1,6 +1,8 @@
 package com.example.erm_demo.adapter.in.rest.controller;
 
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
+import com.example.erm_demo.adapter.in.rest.dto.CauseDto;
+import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import com.example.erm_demo.adapter.in.rest.dto.RiskCategoryDto;
 import com.example.erm_demo.application.service.RiskCategoryService;
 import jakarta.validation.Valid;
@@ -34,35 +36,25 @@ public class RiskCategoryController {
                 .build();
     }
 
-    @GetMapping("/{id}")
-    public ApiResponse<RiskCategoryDto> getRiskCategoryById(@PathVariable("id") Long id) {
+    @GetMapping()
+    public ApiResponse<RiskCategoryDto> getRiskCategoryById(@RequestParam("id") Long id) {
         return ApiResponse.<RiskCategoryDto>builder()
                 .message("Success")
                 .data(riskCategoryService.getRiskCategoryById(id))
                 .build();
     }
 
-    @GetMapping()
-    public ApiResponse<?> getAllRiskCategory( @RequestParam(value = "page", defaultValue = "0") int page,
-                                               @RequestParam(value = "size", defaultValue = "10") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<RiskCategoryDto> result = riskCategoryService.getAllRiskCategories(pageRequest);
-        return ApiResponse.builder()
-                .message("Success")
-                .data(result.getContent())
 
-                .build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteRiskCategory(@PathVariable("id") Long id) {
+    @DeleteMapping()
+    public ApiResponse<Void> deleteRiskCategory(@RequestParam("id") Long id) {
         riskCategoryService.deleteRiskCategory(id);
         return ApiResponse.<Void>builder()
                 .message("Deleted successfully")
                 .build();
     }
+
     @GetMapping("/search")
-    public ApiResponse<?> searchRiskCategory(
+    public ApiResponse<PageResponseDto<RiskCategoryDto>> searchRiskCategory(
             @RequestParam(value = "code", required = false) String code,
             @RequestParam(value = "systemId", required = false) Long systemId,
             @RequestParam(value = "isActive", required = false) Boolean isActive,
@@ -71,12 +63,7 @@ public class RiskCategoryController {
     ) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        Page<RiskCategoryDto> result = riskCategoryService.searchByKeyWord( code, systemId, isActive,  pageRequest);
-        return   ApiResponse.builder()
-                .message("Success")
-                .data(result.getContent())
-
-                .build();
+        return  riskCategoryService.searchRiskCategories(code, systemId, isActive, pageRequest);
 
     }
 

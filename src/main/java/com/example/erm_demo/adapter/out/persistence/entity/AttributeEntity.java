@@ -30,6 +30,7 @@ public class AttributeEntity {
     @Column(name ="data_type")
     String dataType;
     @Column(name ="source_type")
+    @Enumerated(EnumType.STRING)
     SourceType sourceType;
 
     @Lob
@@ -44,7 +45,6 @@ public class AttributeEntity {
 
 //    @OneToMany(mappedBy = "attribute", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //    List<AttributeValueEntity> attributeValueEntities;
-
 
 
 
