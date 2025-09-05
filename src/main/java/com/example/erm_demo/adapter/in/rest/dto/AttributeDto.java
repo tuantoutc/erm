@@ -1,6 +1,8 @@
 package com.example.erm_demo.adapter.in.rest.dto;
 
 
+import com.example.erm_demo.domain.enums.DataType;
+import com.example.erm_demo.domain.enums.DisplayType;
 import com.example.erm_demo.domain.enums.SourceType;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -19,14 +21,16 @@ public class AttributeDto {
     @NotNull
     String name;
     @NotNull
-    String displayType; // Textbox, Selectbox, Radio, Multi-select, Checkbox
-    String dataType; // Date, String, Int, Time, Float (chỉ dùng khi displayType = "Textbox")
+    DisplayType displayType; // Textbox, Selectbox, Radio, Multi-select, Checkbox
+    DataType dataType; // Date, String, Int, Time, Float (chỉ dùng khi displayType = "Textbox")
     SourceType sourceType;
     String description;
     Boolean isActive;
     @NotNull
+
     AttributeGroupDto attributeGroup;
 
     // Danh sách các giá trị cho các loại không phải Textbox
     List<AttributeValueDto> attributeValues;
+
 }

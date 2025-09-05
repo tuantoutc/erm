@@ -8,8 +8,8 @@ import java.util.Set;
 
 @Getter
 public enum SourceType {
-    BUSINESS("BUSINESS", "Business"),
-    SYSTEM("SYSTEM", "System");
+    SYSTEM("SYSTEM", "System"),
+    BUSINESS("BUSINESS", "Business");
 
     private final String displayName;
     private final String description;

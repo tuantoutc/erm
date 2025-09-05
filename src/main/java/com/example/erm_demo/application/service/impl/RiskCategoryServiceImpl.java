@@ -83,11 +83,13 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
 
         riskCategoryMapRepository.deleteByRiskCategoryId(entity.getId());
 
-        if (dto.getParent() != null && dto.getParent().getId() != null) {
+        if (!dto.getParent().getId().equals(entity.getParentId()) )
+        {
             RiskCategoryEntity parent = riskCategoryRepository.findById(dto.getParent().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
             entity.setParentId(parent.getId());
-        } else entity.setParentId(null);
+        }
+        else entity.setParentId(null);
 
         entity = riskCategoryRepository.save(entity);
         mapSystemToRiskCategory(entity, dto);

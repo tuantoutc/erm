@@ -1,5 +1,7 @@
 package com.example.erm_demo.adapter.out.persistence.entity;
 
+import com.example.erm_demo.domain.enums.DataType;
+import com.example.erm_demo.domain.enums.DisplayType;
 import com.example.erm_demo.domain.enums.SourceType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
 
 @Entity
 @Table(name = "attributes")
@@ -28,11 +29,13 @@ public class AttributeEntity {
     @Column(unique = true)
     String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(name ="display_type")
-    String displayType;
+    DisplayType displayType;
 
+    @Enumerated(EnumType.STRING)
     @Column(name ="data_type")
-    String dataType;
+    DataType dataType;
 
     @Column(name ="source_type")
     @Enumerated(EnumType.STRING)

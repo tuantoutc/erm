@@ -23,6 +23,21 @@ public class BaseSpecification {
         };
     }
 
+    public static <T> Specification<T> hasKeywordLikeField(String keyword, String fieldName) {
+        return (root,query, criteriaBuilder)->{
+            if(keyword == null || keyword.trim().isEmpty()){
+                return criteriaBuilder.conjunction();
+            }
+
+            String likePattern = "%" + keyword.toLowerCase() + "%";
+            return criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get(fieldName)),
+                    likePattern
+            );
+        };
+    }
+
+
     /**
      * Tìm kiếm theo keyword trên nhiều fields (code hoặc name)
      */

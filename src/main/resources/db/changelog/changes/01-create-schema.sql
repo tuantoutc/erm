@@ -1,3 +1,6 @@
+--liquibase formatted sql
+--changeset author:initial-schema
+
 -- Tạo database trước khi chạy các lệnh tạo bảng
 CREATE DATABASE IF NOT EXISTS erm_demo;
 USE erm_demo;

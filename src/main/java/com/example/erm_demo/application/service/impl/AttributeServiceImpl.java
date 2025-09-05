@@ -12,6 +12,8 @@ import com.example.erm_demo.adapter.out.persistence.repository.AttributeReposito
 import com.example.erm_demo.adapter.out.persistence.repository.AttributeValueRepository;
 import com.example.erm_demo.adapter.out.persistence.specification.BaseSpecification;
 import com.example.erm_demo.application.service.AttributeService;
+import com.example.erm_demo.domain.enums.DataType;
+import com.example.erm_demo.domain.enums.DisplayType;
 import com.example.erm_demo.domain.enums.ErrorCode;
 import com.example.erm_demo.domain.exception.AppException;
 import com.example.erm_demo.util.ApiResponseUtil;
@@ -40,7 +42,7 @@ public class AttributeServiceImpl implements AttributeService {
     @Transactional
     public AttributeDto createAttribute(AttributeDto dto) {
         AttributeEntity entity = modelMapper.map(dto, AttributeEntity.class);
-        if (dto.getDisplayType().equals("Textbox")) {
+        if (dto.getDisplayType() == DisplayType.TEXTBOX) {
             if (dto.getDataType() != null) {
                 entity.setDataType(dto.getDataType());
             }
@@ -59,7 +61,7 @@ public class AttributeServiceImpl implements AttributeService {
 
 
     private void mapValueToAttributeEntity(AttributeDto dto, AttributeEntity entity) {
-        if(!dto.getDisplayType().equals("Textbox") && dto.getAttributeValues() != null)
+        if(!(dto.getDisplayType() == DisplayType.TEXTBOX) && dto.getAttributeValues() != null)
             {
                 for (var AttributeValueDto : dto.getAttributeValues()) {
                     AttributeValueEntity attributeValueEntity = AttributeValueEntity
@@ -79,7 +81,7 @@ public class AttributeServiceImpl implements AttributeService {
         AttributeEntity existingEntity = attributeRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
         existingEntity = modelMapper.map(dto, AttributeEntity.class);
-        if (dto.getDisplayType().equals("Textbox")) {
+        if (dto.getDisplayType() == DisplayType.TEXTBOX) {
             if (dto.getDataType() != null) {
                 existingEntity.setDataType(dto.getDataType());
             }
@@ -118,16 +120,23 @@ public class AttributeServiceImpl implements AttributeService {
 
     @Override
     @Transactional(readOnly = true)
-    public ApiResponse<PageResponseDto<AttributeDto>> search(String code, String dataType, Long attributeGroupId, Boolean isActive, PageRequest pageRequest) {
-        Sort sortBy = Sort.by("id").ascending();
-        Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), sortBy);
+    public ApiResponse<PageResponseDto<AttributeDto>> search(String code, DataType dataType, Long attributeGroupId, Boolean isActive, PageRequest pageRequest) {
+        Sort customSort = Sort.by(Sort.Order.desc("sourceType"));
+        Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), customSort);
+
+
 
         Specification<AttributeEntity> keywordSpec = BaseSpecification.hasKeyword(code);
-        Specification<AttributeEntity> dataTypeSpec = BaseSpecification.hasKeywordInField(dataType, "dataType");
+        Specification<AttributeEntity> dataTypeSpec = dataType != null
+    ? BaseSpecification.hasKeywordInField(dataType.name(), "dataType")
+    : null;
         Specification<AttributeEntity> attributeGroupSpec = BaseSpecification.hasFieldEqual("attributeGroupId", attributeGroupId);
         Specification<AttributeEntity> isActiveSpec = BaseSpecification.hasFieldBoolean("isActive", isActive);
 
-        Specification<AttributeEntity> specification = Specification.where(keywordSpec).and(dataTypeSpec).and(attributeGroupSpec).and(isActiveSpec);
+        Specification<AttributeEntity> specification = Specification.where(keywordSpec)
+    .and(dataTypeSpec)
+    .and(attributeGroupSpec)
+    .and(isActiveSpec);
 
         Page<AttributeEntity> page = attributeRepository.findAll(specification, pageable);
         Page<AttributeDto> attributeDtoPage = page.map(attributeMapper::maptoAttributeDto);

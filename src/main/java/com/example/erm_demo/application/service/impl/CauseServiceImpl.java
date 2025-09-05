@@ -57,7 +57,7 @@ public class CauseServiceImpl implements CauseService {
 
         mapSystemToCause(causeEntity, dto);
 
-        return causeMapper.mapToCauseDto(causeRepository.save(causeEntity));
+        return causeMapper.mapToCauseDto(causeEntity);
     }
 
     private void mapSystemToCause(CauseEntity entity, CauseDto dto) {
@@ -78,7 +78,9 @@ public class CauseServiceImpl implements CauseService {
     public CauseDto updateCause(CauseDto dto) {
         CauseEntity existingEntity = causeRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
+
         causeMapRepository.deleteByCauseId(existingEntity.getId());
+
         existingEntity = modelMapper.map(dto, CauseEntity.class);
         if (!dto.getCauseCategoryDto().getId().equals(existingEntity.getCauseCategoryId())) {
             CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
@@ -89,7 +91,7 @@ public class CauseServiceImpl implements CauseService {
 
         mapSystemToCause(existingEntity, dto);
 
-        return causeMapper.mapToCauseDto(causeRepository.save(existingEntity));
+        return causeMapper.mapToCauseDto(existingEntity);
 
     }
 

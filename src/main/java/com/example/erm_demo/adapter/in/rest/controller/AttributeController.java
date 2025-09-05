@@ -4,6 +4,7 @@ import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
 import com.example.erm_demo.adapter.in.rest.dto.AttributeDto;
 import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import com.example.erm_demo.application.service.AttributeService;
+import com.example.erm_demo.domain.enums.DataType;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -53,7 +54,7 @@ public class AttributeController {
     @GetMapping("/search")
     public ApiResponse<PageResponseDto<AttributeDto>> searchAttribute(
             @RequestParam(value = "code", required = false) String code,
-            @RequestParam(value = "dataType", required = false) String dataType,
+           @Valid @RequestParam(value = "dataType", required = false) DataType dataType,
             @RequestParam(value = "attributeGroupId", required = false) Long attributeGroupId,
             @RequestParam(value = "isActive", required = false) Boolean isActive,
             @RequestParam(value = "page", defaultValue = "0") int page,

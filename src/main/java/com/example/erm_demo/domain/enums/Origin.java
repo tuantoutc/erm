@@ -3,13 +3,9 @@ package com.example.erm_demo.domain.enums;
 import lombok.Getter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-/**
- * Enum cho nguồn gốc (Origin)
- * Định nghĩa các loại nguồn gốc có thể có trong hệ thống
- */
 @Getter
 public enum Origin {
     EXTERNAL("EXTERNAL", "External origin"),// Nguồn gốc bên ngoài
@@ -33,30 +29,55 @@ public enum Origin {
         this.description = description;
     }
 
-    /**
-     * Tìm enum theo displayName với tốc độ O(1)
-     * @param displayName tên hiển thị
-     * @return Origin enum hoặc null nếu không tìm thấy
-     */
-    public static Origin fromDisplayName(String displayName) {
-        return DISPLAY_NAME_MAP.get(displayName);
-    }
+    //@param displayName tên hiển thị @return Origin enum hoặc null nếu không tìm thấy
+
+//    public static Origin fromDisplayName(String displayName) {
+//        return DISPLAY_NAME_MAP.get(displayName);
+//    }
+//
+//    // @param displayName tên hiển thị cần kiểm tra @return true nếu hợp lệ, false nếu không
+//    public static boolean isValidDisplayName(String displayName) {
+//        return DISPLAY_NAME_MAP.containsKey(displayName);
+//    }
+//
+//    public static Set<String> getAllDisplayNames() {
+//        return DISPLAY_NAME_MAP.keySet();
+//    }
 
     /**
-     * Kiểm tra xem displayName có hợp lệ không với tốc độ O(1)
-     * @param displayName tên hiển thị cần kiểm tra
-     * @return true nếu hợp lệ, false nếu không
+     * Lấy danh sách ObjectType hợp lệ cho Origin cụ thể
+     * @param origin Origin cần lấy danh sách ObjectType
+     * @return List chứa các ObjectType hợp lệ
      */
-    public static boolean isValidDisplayName(String displayName) {
-        return DISPLAY_NAME_MAP.containsKey(displayName);
+    public static List<ObjectType> getValidObjects(Origin origin) {
+        switch (origin) {
+            case INTERNAL:
+                return List.of(
+                    ObjectType.TAP_DOAN,
+                    ObjectType.TO_CHUC,
+                    ObjectType.BO_PHAN,
+                    ObjectType.CA_NHAN
+                );
+            case EXTERNAL:
+                return List.of(
+                    ObjectType.KHACH_HANG_B2B,
+                    ObjectType.KHACH_HANG_B2C,
+                    ObjectType.KHACH_HANG_OEM,
+                    ObjectType.NHA_CUNG_CAP,
+                    ObjectType.DOI_TAC_VAN_CHUYEN,
+                    ObjectType.DOI_TAC_THANH_TOAN,
+                    ObjectType.DOI_TAC_KHAC,
+                    ObjectType.MERCHANT,
+                    ObjectType.DOI_THU,
+                    ObjectType.DOI_TAC_NOI_BO
+                );
+            default:
+                return List.of();
+        }
     }
 
-    /**
-     * Lấy tất cả displayName có sẵn
-     * @return Set chứa tất cả displayName
-     */
-    public static Set<String> getAllDisplayNames() {
-        return DISPLAY_NAME_MAP.keySet();
+    public static boolean isValidObjectForOrigin(Origin origin, ObjectType objectType) {
+        return getValidObjects(origin).contains(objectType);
     }
 
     @Override
