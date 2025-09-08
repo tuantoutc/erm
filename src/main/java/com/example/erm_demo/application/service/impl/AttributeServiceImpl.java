@@ -15,6 +15,7 @@ import com.example.erm_demo.application.service.AttributeService;
 import com.example.erm_demo.domain.enums.DataType;
 import com.example.erm_demo.domain.enums.DisplayType;
 import com.example.erm_demo.domain.enums.ErrorCode;
+import com.example.erm_demo.domain.enums.SourceType;
 import com.example.erm_demo.domain.exception.AppException;
 import com.example.erm_demo.util.ApiResponseUtil;
 import lombok.RequiredArgsConstructor;
@@ -48,21 +49,22 @@ public class AttributeServiceImpl implements AttributeService {
             }
             else throw new AppException(ErrorCode.INVALID_REQUEST);
         }
+        entity.setSourceType(SourceType.BUSINESS);
+
         AttributeGroupEntity attributeGroup = attributeGroupRepository.findById(dto.getAttributeGroup().getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
         entity.setAttributeGroupId(attributeGroup.getId());
 
         entity = attributeRepository.save(entity);
-
-        mapValueToAttributeEntity(dto, entity);
+        if(dto.getDisplayType() != DisplayType.TEXTBOX && dto.getAttributeValues() != null) {
+            mapValueToAttributeEntity(dto, entity);
+        }
 
         return attributeMapper.maptoAttributeDto(entity);
     }
 
 
     private void mapValueToAttributeEntity(AttributeDto dto, AttributeEntity entity) {
-        if(!(dto.getDisplayType() == DisplayType.TEXTBOX) && dto.getAttributeValues() != null)
-            {
                 for (var AttributeValueDto : dto.getAttributeValues()) {
                     AttributeValueEntity attributeValueEntity = AttributeValueEntity
                             .builder()
@@ -71,8 +73,6 @@ public class AttributeServiceImpl implements AttributeService {
                             .build();
                     attributeValueRepository.save(attributeValueEntity);
                 }
-            } else
-                throw new AppException(ErrorCode.INVALID_REQUEST);
     }
 
     @Override
@@ -80,6 +80,9 @@ public class AttributeServiceImpl implements AttributeService {
     public AttributeDto updateAttribute(AttributeDto dto) {
         AttributeEntity existingEntity = attributeRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
+        if (!(existingEntity.getSourceType() == SourceType.BUSINESS)) {
+            throw new AppException(ErrorCode.SYSTEM_COMPONENT_NOT_MODIFIABLE);
+        }
         existingEntity = modelMapper.map(dto, AttributeEntity.class);
         if (dto.getDisplayType() == DisplayType.TEXTBOX) {
             if (dto.getDataType() != null) {
@@ -92,9 +95,12 @@ public class AttributeServiceImpl implements AttributeService {
                     .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
             existingEntity.setAttributeGroupId(attributeGroupEntity.getId());
         }
-
+        existingEntity.setSourceType(SourceType.BUSINESS);
         attributeValueRepository.deleteByAttributeId(existingEntity.getId());
-        mapValueToAttributeEntity(dto, existingEntity);
+
+        if(dto.getDisplayType() != DisplayType.TEXTBOX && dto.getAttributeValues() != null) {
+            mapValueToAttributeEntity(dto, existingEntity);
+        }
 
         return attributeMapper.maptoAttributeDto(attributeRepository.save(existingEntity));
     }

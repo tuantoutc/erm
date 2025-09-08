@@ -34,10 +34,11 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
     @Transactional
     public AttributeGroupDto createAttributeGroup(AttributeGroupDto dto) {
         AttributeGroupEntity attributeGroupEntity = modelMapper.map(dto, AttributeGroupEntity.class);
-        if( dto.getSourceType() == null || !dto.getSourceType().equals(SourceType.SYSTEM))
+        if( dto.getSourceType() == null || !(dto.getSourceType()==SourceType.SYSTEM))
+        {
             attributeGroupEntity.setSourceType(SourceType.BUSINESS);
-        else
-            attributeGroupEntity.setSourceType(SourceType.SYSTEM);
+        }
+        else attributeGroupEntity.setSourceType(SourceType.SYSTEM);
         return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupRepository.save(attributeGroupEntity));
     }
 
@@ -48,11 +49,16 @@ public class AttributeGroupServiceImpl implements AttributeGroupService {
         AttributeGroupEntity existingEntity = attributeGroupRepository.findById(dto.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
         // Chỉ cho phép cập nhật nếu SourceType là BUSINESS
-        if (!existingEntity.getSourceType().equals(SourceType.BUSINESS)) {
+        if (!(existingEntity.getSourceType() == SourceType.BUSINESS)) {
             throw new AppException(ErrorCode.SYSTEM_COMPONENT_NOT_MODIFIABLE);
         }
-        AttributeGroupEntity attributeGroupEntity = modelMapper.map(dto , AttributeGroupEntity.class);
-        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupRepository.save(attributeGroupEntity));
+        existingEntity = modelMapper.map(dto , AttributeGroupEntity.class);
+        if( dto.getSourceType() == null || !(dto.getSourceType()==SourceType.SYSTEM))
+        {
+            existingEntity.setSourceType(SourceType.BUSINESS);
+        }
+        else existingEntity.setSourceType(SourceType.SYSTEM);
+        return attributeGroupMapper.maptoAttributeGroupDto(attributeGroupRepository.save(existingEntity));
     }
 
     @Override

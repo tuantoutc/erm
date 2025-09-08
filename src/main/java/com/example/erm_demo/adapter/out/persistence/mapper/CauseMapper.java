@@ -39,7 +39,7 @@ public class CauseMapper {
                                             .name(causeCategoryEntity.getName())
                                             .code(causeCategoryEntity.getCode())
                                             .build();
-        causeDto.setCauseCategoryDto(causeCategoryDto);
+        causeDto.setCauseCategory(causeCategoryDto);
 
         List<CauseMapEntity> listSystem = causeMapRepository.findByCauseId(entity.getId());
         if (listSystem != null && !listSystem.isEmpty()) {

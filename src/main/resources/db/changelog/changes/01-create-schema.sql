@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `cause_categories` (
   `note`                   text
 );
 
-CREATE TABLE IF NOT EXISTS `cause_categories_map` (
+CREATE TABLE IF NOT EXISTS `cause_category_map` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `cause_category_id`      bigint,
   `system_id`              bigint
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `causes` (
   `is_active`              boolean
 );
 
-CREATE TABLE IF NOT EXISTS `causes_map` (
+CREATE TABLE IF NOT EXISTS `cause_map` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `causes_id`              bigint,
   `system_id`              bigint
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `risk_categories` (
   `is_active`              boolean
 );
 
-CREATE TABLE IF NOT EXISTS `risk_categories_map` (
+CREATE TABLE IF NOT EXISTS `risk_category_map` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `system_id`              bigint,
   `risk_category_id`       bigint
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `attributes` (
   `is_active`              boolean
 );
 
-CREATE TABLE IF NOT EXISTS `atribute_values` (
+CREATE TABLE IF NOT EXISTS `attribute_values` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `value`                  nvarchar(50),
   `attribute_id`           bigint
@@ -96,23 +96,23 @@ CREATE TABLE IF NOT EXISTS `risk_types` (
   `is_active`              boolean
 );
 
-CREATE TABLE IF NOT EXISTS `risk_types_map` (
+CREATE TABLE IF NOT EXISTS `risk_type_map` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `system_id`              bigint,
   `risk_type_id`           bigint
 );
 
-CREATE TABLE IF NOT EXISTS `risk_types_attributes` (
+CREATE TABLE IF NOT EXISTS `risk_type_attributes` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `risk_type_id`           bigint,
   `attribute_group_id`     bigint,
   `attribute_id`           bigint
 );
 
-CREATE TABLE IF NOT EXISTS `risk_types_attributes_values` (
+CREATE TABLE IF NOT EXISTS `risk_type_attribute_values` (
   `id`                      bigint        PRIMARY KEY AUTO_INCREMENT,
   `risk_types_attribute_id` bigint,
-  `atribute_value_id`       bigint,
+  `attribute_value_id`       bigint,
   `text_value`              varchar(50)
 );
 
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `sample_actions` (
   `is_active`              boolean
 );
 
-CREATE TABLE IF NOT EXISTS `sample_actions_map` (
+CREATE TABLE IF NOT EXISTS `sample_action_map` (
   `id`                     bigint         PRIMARY KEY AUTO_INCREMENT,
   `type`                   varchar(50),
   `sample_action_id`       bigint,
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `tracking_causes` (
   `state`                  varchar(50)
 );
 
-CREATE TABLE IF NOT EXISTS `tracking_causes_map` (
+CREATE TABLE IF NOT EXISTS `tracking_cause_map` (
   `id`                     bigint         PRIMARY KEY AUTO_INCREMENT,
   `tracking_cause_id`      bigint,
   `department_id`          bigint,
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS `tracking_causes_map` (
   `parner_id`              bigint
 );
 
-CREATE TABLE IF NOT EXISTS `tracking_causes_map_fail_products` (
+CREATE TABLE IF NOT EXISTS `tracking_cause_map_fail_products` (
   `id`                     bigint         PRIMARY KEY AUTO_INCREMENT,
   `tracking_causes_map_id` bigint,
   `dic_id`                 bigint
@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `incident_categories` (
   `is_active`              boolean
 );
 
-CREATE TABLE IF NOT EXISTS `incident_categories_map` (
+CREATE TABLE IF NOT EXISTS `incident_category_map` (
   `id`                     bigint        PRIMARY KEY AUTO_INCREMENT,
   `system_id`              bigint,
   `incident_category_id`   bigint
@@ -297,23 +297,23 @@ CREATE TABLE IF NOT EXISTS `incident_types` (
   `is_active`              boolean
 );
 
-CREATE TABLE IF NOT EXISTS `incident_types_map` (
+CREATE TABLE IF NOT EXISTS `incident_type_map` (
   `id`                     bigint         PRIMARY KEY AUTO_INCREMENT,
   `system_id`              bigint,
   `incident_type_id`       bigint
 );
 
-CREATE TABLE IF NOT EXISTS `incident_types_attributes` (
+CREATE TABLE IF NOT EXISTS `incident_type_attributes` (
   `id`                     bigint         PRIMARY KEY AUTO_INCREMENT,
   `incident_type_id`       bigint,
   `attribute_group_id`     bigint,
   `attribute_id`           bigint
 );
 
-CREATE TABLE IF NOT EXISTS `incident_types_attributes_values` (
+CREATE TABLE IF NOT EXISTS `incident_type_attribute_values` (
   `id`                          bigint         PRIMARY KEY AUTO_INCREMENT,
   `incident_types_attribute_id` bigint,
-  `atribute_value_id`           bigint,
+  `attribute_value_id`          bigint,
   `text_value`                  varchar(50)
 );
 
@@ -372,27 +372,27 @@ CREATE TABLE IF NOT EXISTS `related_incidents` (
 -- Foreign KEYs
 ALTER TABLE `causes` ADD FOREIGN KEY  (`cause_category_id`) REFERENCES `cause_categories` (`id`);
 
-ALTER TABLE `causes_map` ADD FOREIGN KEY (`causes_id`) REFERENCES `causes` (`id`);
+ALTER TABLE `cause_map` ADD FOREIGN KEY (`causes_id`) REFERENCES `causes` (`id`);
 
 ALTER TABLE `risk_categories` ADD FOREIGN KEY  (`parent_id`) REFERENCES `risk_categories` (`id`);
 
-ALTER TABLE `risk_categories_map` ADD FOREIGN KEY  (`risk_category_id`) REFERENCES `risk_categories` (`id`);
+ALTER TABLE `risk_category_map` ADD FOREIGN KEY  (`risk_category_id`) REFERENCES `risk_categories` (`id`);
 
 ALTER TABLE `attributes` ADD FOREIGN KEY  (`attribute_group_id`) REFERENCES `attribute_groups` (`id`);
 
-ALTER TABLE `atribute_values` ADD FOREIGN KEY  (`attribute_id`) REFERENCES `attributes` (`id`);
+ALTER TABLE `attribute_values` ADD FOREIGN KEY  (`attribute_id`) REFERENCES `attributes` (`id`);
 
-ALTER TABLE `risk_types_map` ADD FOREIGN KEY  (`risk_type_id`) REFERENCES `risk_types` (`id`);
+ALTER TABLE `risk_type_map` ADD FOREIGN KEY  (`risk_type_id`) REFERENCES `risk_types` (`id`);
 
-ALTER TABLE `risk_types_attributes` ADD FOREIGN KEY  (`risk_type_id`) REFERENCES `risk_types` (`id`);
+ALTER TABLE `risk_type_attributes` ADD FOREIGN KEY  (`risk_type_id`) REFERENCES `risk_types` (`id`);
 
-ALTER TABLE `risk_types_attributes` ADD FOREIGN KEY  (`attribute_group_id`) REFERENCES `attribute_groups` (`id`);
+ALTER TABLE `risk_type_attributes` ADD FOREIGN KEY  (`attribute_group_id`) REFERENCES `attribute_groups` (`id`);
 
-ALTER TABLE `risk_types_attributes` ADD FOREIGN KEY  (`attribute_id`) REFERENCES `attributes` (`id`);
+ALTER TABLE `risk_type_attributes` ADD FOREIGN KEY  (`attribute_id`) REFERENCES `attributes` (`id`);
 
-ALTER TABLE `risk_types_attributes_values` ADD FOREIGN KEY  (`risk_types_attribute_id`) REFERENCES `risk_types_attributes` (`id`);
+ALTER TABLE `risk_type_attribute_values` ADD FOREIGN KEY  (`risk_types_attribute_id`) REFERENCES `risk_type_attributes` (`id`);
 
-ALTER TABLE `risk_types_attributes_values` ADD FOREIGN KEY  (`atribute_value_id`) REFERENCES `atribute_values` (`id`);
+ALTER TABLE `risk_type_attribute_values` ADD FOREIGN KEY  (`attribute_value_id`) REFERENCES `attribute_values` (`id`);
 
 ALTER TABLE `sample_actions` ADD FOREIGN KEY  (`risk_type_id`) REFERENCES `risk_types` (`id`);
 
@@ -400,9 +400,9 @@ ALTER TABLE `sample_actions` ADD FOREIGN KEY  (`incident_type_id`) REFERENCES `i
 
 ALTER TABLE `sample_actions` ADD FOREIGN KEY  (`cause_category_id`) REFERENCES `cause_categories` (`id`);
 
-ALTER TABLE `sample_actions_map` ADD FOREIGN KEY  (`sample_action_id`) REFERENCES `sample_actions` (`id`);
+ALTER TABLE `sample_action_map` ADD FOREIGN KEY  (`sample_action_id`) REFERENCES `sample_actions` (`id`);
 
-ALTER TABLE `sample_actions_map` ADD FOREIGN KEY  (`preventive_measure_id`) REFERENCES `preventive_measures` (`id`);
+ALTER TABLE `sample_action_map` ADD FOREIGN KEY  (`preventive_measure_id`) REFERENCES `preventive_measures` (`id`);
 
 ALTER TABLE `risks` ADD FOREIGN KEY  (`risk_type_id`) REFERENCES `risk_types` (`id`);
 
@@ -414,7 +414,7 @@ ALTER TABLE `risk_attribute_line` ADD FOREIGN KEY  (`attribute_id`) REFERENCES `
 
 ALTER TABLE `risk_attribute_line_values` ADD FOREIGN KEY  (`risk_lines_id`) REFERENCES `risk_attribute_line` (`id`);
 
-ALTER TABLE `risk_attribute_line_values` ADD FOREIGN KEY  (`attribute_values_id`) REFERENCES `atribute_values` (`id`);
+ALTER TABLE `risk_attribute_line_values` ADD FOREIGN KEY  (`attribute_values_id`) REFERENCES `attribute_values` (`id`);
 
 ALTER TABLE `risk_cause_line` ADD FOREIGN KEY  (`risk_id`) REFERENCES `risks` (`id`);
 
@@ -426,9 +426,9 @@ ALTER TABLE `tracking_causes` ADD FOREIGN KEY  (`cause_category_id`) REFERENCES 
 
 ALTER TABLE `tracking_causes` ADD FOREIGN KEY  (`cause_id`) REFERENCES `causes` (`id`);
 
-ALTER TABLE `tracking_causes_map` ADD FOREIGN KEY  (`tracking_cause_id`) REFERENCES `tracking_causes` (`id`);
+ALTER TABLE `tracking_cause_map` ADD FOREIGN KEY  (`tracking_cause_id`) REFERENCES `tracking_causes` (`id`);
 
-ALTER TABLE `tracking_causes_map_fail_products` ADD FOREIGN KEY  (`tracking_causes_map_id`) REFERENCES `tracking_causes_map` (`id`);
+ALTER TABLE `tracking_cause_map_fail_products` ADD FOREIGN KEY  (`tracking_causes_map_id`) REFERENCES `tracking_cause_map` (`id`);
 
 ALTER TABLE `risk_cause_line_action_line` ADD FOREIGN KEY  (`risk_cause_line_id`) REFERENCES `risk_cause_line` (`id`);
 
@@ -460,19 +460,19 @@ ALTER TABLE `task_files` ADD FOREIGN KEY  (`task_id`) REFERENCES `tasks` (`id`);
 
 ALTER TABLE `incident_categories` ADD FOREIGN KEY  (`parent_id`) REFERENCES `incident_categories` (`id`);
 
-ALTER TABLE `incident_categories_map` ADD FOREIGN KEY  (`incident_category_id`) REFERENCES `risk_categories` (`id`);
+ALTER TABLE `incident_category_map` ADD FOREIGN KEY  (`incident_category_id`) REFERENCES `incident_categories` (`id`);
 
-ALTER TABLE `incident_types_map` ADD FOREIGN KEY  (`incident_type_id`) REFERENCES `incident_types` (`id`);
+ALTER TABLE `incident_type_map` ADD FOREIGN KEY  (`incident_type_id`) REFERENCES `incident_types` (`id`);
 
-ALTER TABLE `incident_types_attributes` ADD FOREIGN KEY  (`incident_type_id`) REFERENCES `incident_types` (`id`);
+ALTER TABLE `incident_type_attributes` ADD FOREIGN KEY  (`incident_type_id`) REFERENCES `incident_types` (`id`);
 
-ALTER TABLE `incident_types_attributes` ADD FOREIGN KEY  (`attribute_group_id`) REFERENCES `attribute_groups` (`id`);
+ALTER TABLE `incident_type_attributes` ADD FOREIGN KEY  (`attribute_group_id`) REFERENCES `attribute_groups` (`id`);
 
-ALTER TABLE `incident_types_attributes` ADD FOREIGN KEY  (`attribute_id`) REFERENCES `attributes` (`id`);
+ALTER TABLE `incident_type_attributes` ADD FOREIGN KEY  (`attribute_id`) REFERENCES `attributes` (`id`);
 
-ALTER TABLE `incident_types_attributes_values` ADD FOREIGN KEY  (`incident_types_attribute_id`) REFERENCES `incident_types_attributes` (`id`);
+ALTER TABLE `incident_type_attribute_values` ADD FOREIGN KEY  (`incident_types_attribute_id`) REFERENCES `incident_type_attributes` (`id`);
 
-ALTER TABLE `incident_types_attributes_values` ADD FOREIGN KEY  (`atribute_value_id`) REFERENCES `atribute_values` (`id`);
+ALTER TABLE `incident_type_attribute_values` ADD FOREIGN KEY  (`attribute_value_id`) REFERENCES `attribute_values` (`id`);
 
 ALTER TABLE `incidents` ADD FOREIGN KEY  (`incident_type_id`) REFERENCES `incident_types` (`id`);
 
@@ -484,7 +484,7 @@ ALTER TABLE `incident_attribute_line` ADD FOREIGN KEY  (`attribute_id`) REFERENC
 
 ALTER TABLE `incident_attribute_line_values` ADD FOREIGN KEY  (`incident_lines_id`) REFERENCES `incident_attribute_line` (`id`);
 
-ALTER TABLE `incident_attribute_line_values` ADD FOREIGN KEY  (`attribute_values_id`) REFERENCES `atribute_values` (`id`);
+ALTER TABLE `incident_attribute_line_values` ADD FOREIGN KEY  (`attribute_values_id`) REFERENCES `attribute_values` (`id`);
 
 ALTER TABLE `incident_cause_line` ADD FOREIGN KEY  (`incident_id`) REFERENCES `incidents` (`id`);
 

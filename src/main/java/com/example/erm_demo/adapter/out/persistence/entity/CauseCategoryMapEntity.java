@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "cause_categories_map")
+@Table(name = "cause_category_map")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

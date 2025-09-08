@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "risk_types_attributes_values")
+@Table(name = "risk_type_attribute_values")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

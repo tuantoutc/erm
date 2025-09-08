@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "causes_map")
+@Table(name = "cause_map")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

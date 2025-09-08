@@ -9,5 +9,6 @@ import java.util.List;
 public interface RiskTypeAttributeRepository extends JpaRepository<RiskTypeAttributeEntity,Long> {
 
     List<RiskTypeAttributeEntity> findByRiskTypeId(Long id);
+    void deleteByRiskTypeId(Long id);
 
 }

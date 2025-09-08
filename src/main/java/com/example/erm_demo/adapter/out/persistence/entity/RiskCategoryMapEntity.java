@@ -5,7 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "risk_categories_map")
+@Table(name = "risk_category_map")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

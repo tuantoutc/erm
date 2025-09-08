@@ -37,6 +37,7 @@ public class RiskTypeEntity {
     @Column(name = "is_active")
     Boolean isActive;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "object")
     ObjectType object; // con người, quy trình, hệ thống, bên thứ 3
 

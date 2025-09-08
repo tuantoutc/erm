@@ -45,6 +45,8 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
     }
 
+
+    // neu co api loi api sau true tang len 1 id
     @Override
     @Transactional
     public RiskCategoryDto createRiskCategory(RiskCategoryDto dto) {
@@ -54,8 +56,11 @@ public class RiskCategoryServiceImpl implements RiskCategoryService {
                     .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
             entity.setParentId(parent.getId());
         } else entity.setParentId(null);
+
+
         entity = riskCategoryRepository.save(entity);
         mapSystemToRiskCategory(entity, dto);
+
 
         return riskCategoryMapper.maptoRiskCategoryDto(entity);
     }

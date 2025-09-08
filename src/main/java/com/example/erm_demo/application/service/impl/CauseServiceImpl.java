@@ -46,10 +46,11 @@ public class CauseServiceImpl implements CauseService {
     }
 
     @Override
+    @Transactional
     public CauseDto createCause(CauseDto dto) {
         CauseEntity causeEntity = modelMapper.map(dto, CauseEntity.class);
 
-        CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
+        CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategory().getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
         causeEntity.setCauseCategoryId(causeCategoryEntity.getId());
 
@@ -82,8 +83,8 @@ public class CauseServiceImpl implements CauseService {
         causeMapRepository.deleteByCauseId(existingEntity.getId());
 
         existingEntity = modelMapper.map(dto, CauseEntity.class);
-        if (!dto.getCauseCategoryDto().getId().equals(existingEntity.getCauseCategoryId())) {
-            CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategoryDto().getId())
+        if (!dto.getCauseCategory().getId().equals(existingEntity.getCauseCategoryId())) {
+            CauseCategoryEntity causeCategoryEntity = causeCategoryRepository.findById(dto.getCauseCategory().getId())
                     .orElseThrow(() -> new AppException(ErrorCode.ENTITY_NOT_FOUND));
             existingEntity.setCauseCategoryId(causeCategoryEntity.getId());
         }

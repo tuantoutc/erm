@@ -2,6 +2,7 @@ package com.example.erm_demo.adapter.in.rest.dto;
 
 
 import com.example.erm_demo.domain.enums.SourceType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AttributeGroupDto {
 
     Long id;
