@@ -1,0 +1,15 @@
+package com.example.erm_demo.adapter.out.persistence.repository;
+
+import com.example.erm_demo.adapter.out.persistence.entity.SampleActionMapEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface SampleActionMapRepository extends JpaRepository<SampleActionMapEntity,Long> {
+
+    void deleteBySampleActionId(Long id);
+
+    List<SampleActionMapEntity> findBySampleActionId(Long id);
+
+
+}
