@@ -21,30 +21,30 @@ public class RiskController {
     private final RiskService riskService;
 
     // API cho multipart form data (có file upload)
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<RiskDto> createRiskWithFiles(
-            @RequestPart("data") String riskData,
-            @RequestPart(value = "files", required = false) MultipartFile[] files
-    ) throws Exception {
-        // Parse JSON string thành RiskDto
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        RiskDto dto = objectMapper.readValue(riskData, RiskDto.class);
-
-        return ApiResponse.<RiskDto>builder()
-                .message("Success")
-                .data(riskService.createRisk(dto, files))
-                .build();
-    }
+//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ApiResponse<RiskDto> createRiskWithFiles(
+//            @RequestPart("data") String riskData,
+//            @RequestPart(value = "files", required = false) MultipartFile[] files
+//    ) throws Exception {
+//        // Parse JSON string thành RiskDto
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.registerModule(new JavaTimeModule());
+//        RiskDto dto = objectMapper.readValue(riskData, RiskDto.class);
+//
+//        return ApiResponse.<RiskDto>builder()
+//                .message("Success")
+//                .data(riskService.createRisk(dto, files))
+//                .build();
+//    }
 
     // API cho JSON request (không có file upload)
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping()
     public ApiResponse<RiskDto> createRisk(
             @RequestBody @Valid RiskDto dto
     ) {
         return ApiResponse.<RiskDto>builder()
                 .message("Success")
-                .data(riskService.createRisk(dto, null))
+                .data(riskService.createRisk(dto))
                 .build();
     }
 

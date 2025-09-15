@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
 
 @Entity
 @Table(name = "cause_categories")
@@ -32,7 +31,4 @@ public class CauseCategoryEntity {
     @Column(columnDefinition = "TEXT")
     String note;
 
-//    Đã loại bỏ các trường quan hệ - sẽ quản lý thủ công qua Repository
-//    List<CauseEntity> causeEntities;
-//    List<CauseCategoryMapEntity> causeCategoryMapEntities;
 }

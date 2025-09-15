@@ -28,6 +28,6 @@ public class CauseDto {
     String note;
     Boolean isActive;
     @NotNull
-    CauseCategoryDto causeCategory;
-    List<SystemDto> systemDtos;
+    IdCodeNameDto causeCategory;
+    List<SystemDto> system;
 }

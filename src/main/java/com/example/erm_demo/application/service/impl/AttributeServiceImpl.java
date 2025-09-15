@@ -28,6 +28,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -129,9 +131,6 @@ public class AttributeServiceImpl implements AttributeService {
     public ApiResponse<PageResponseDto<AttributeDto>> search(String code, DataType dataType, Long attributeGroupId, Boolean isActive, PageRequest pageRequest) {
         Sort customSort = Sort.by(Sort.Order.desc("sourceType"));
         Pageable pageable = PageRequest.of(pageRequest.getPageNumber(), pageRequest.getPageSize(), customSort);
-
-
-
         Specification<AttributeEntity> keywordSpec = BaseSpecification.hasKeyword(code);
         Specification<AttributeEntity> dataTypeSpec = dataType != null
     ? BaseSpecification.hasKeywordInField(dataType.name(), "dataType")
@@ -144,8 +143,11 @@ public class AttributeServiceImpl implements AttributeService {
     .and(attributeGroupSpec)
     .and(isActiveSpec);
 
+
         Page<AttributeEntity> page = attributeRepository.findAll(specification, pageable);
         Page<AttributeDto> attributeDtoPage = page.map(attributeMapper::maptoAttributeDto);
+
+
         return ApiResponseUtil.createPageResponse(attributeDtoPage);
 
     }

@@ -3,7 +3,6 @@ package com.example.erm_demo.util;
 import com.example.erm_demo.adapter.in.rest.dto.ApiResponse;
 import com.example.erm_demo.adapter.in.rest.dto.PageResponseDto;
 import org.springframework.data.domain.Page;
-import java.util.List;
 import java.util.UUID;
 
 public class ApiResponseUtil {

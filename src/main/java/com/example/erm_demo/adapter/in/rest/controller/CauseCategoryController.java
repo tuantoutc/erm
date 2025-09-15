@@ -9,18 +9,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("/cause-category")
 @RequiredArgsConstructor
 public class CauseCategoryController {
 
-
     private final CauseCategoryService causeCategoryService;
 
     @PostMapping
     public ApiResponse<CauseCategoryDto> createCauseCategory(@RequestBody @Valid CauseCategoryDto dto) {
-
         return ApiResponse.<CauseCategoryDto>builder()
                 .message("Success")
                 .data(causeCategoryService.createCauseCategory(dto))
@@ -29,7 +26,6 @@ public class CauseCategoryController {
 
     @PutMapping
     public ApiResponse<CauseCategoryDto> updateCauseCategory(@RequestBody @Valid CauseCategoryDto dto) {
-
         return ApiResponse.<CauseCategoryDto>builder()
                 .message("Success")
                 .data(causeCategoryService.updateCauseCategory(dto))
@@ -38,14 +34,11 @@ public class CauseCategoryController {
 
     @GetMapping()
     public ApiResponse<CauseCategoryDto> getCauseCategoryById(@RequestParam("id") Long id) {
-
-
         return ApiResponse.<CauseCategoryDto>builder()
                 .message("Success")
                 .data(causeCategoryService.getCauseCategoryById(id))
                 .build();
     }
-
 
     @DeleteMapping()
     public ApiResponse<Void> deleteCauseCategory(@RequestParam("id") Long id) {
@@ -65,6 +58,4 @@ public class CauseCategoryController {
         PageRequest pageRequest = PageRequest.of(page, size);
         return causeCategoryService.searchCauseCategories(code, systemId, pageRequest);
     }
-
-
 }

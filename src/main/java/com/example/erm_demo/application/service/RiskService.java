@@ -11,7 +11,11 @@ import java.security.NoSuchAlgorithmException;
 
 public interface RiskService {
 
-    RiskDto createRisk(RiskDto riskDto, MultipartFile[] files) ;
+
+//    RiskDto createRisk(RiskDto riskDto, MultipartFile[] files) ;
+    RiskDto createRisk(RiskDto riskDto) ;
+
+
     RiskDto updateRisk(RiskDto riskDto, MultipartFile[] files) ;
     RiskDto getRiskById(Long id );
     void deleteRisk(Long id);

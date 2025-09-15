@@ -34,7 +34,7 @@ public class RiskDto {
 
     List<RiskAttributeLineDto> riskAttributeLines;
 
-    List<RelatedRiskDto> relatedRisks;
+    List<RelatedDto> relatedRisks;
 
     List<TagDto>  tags;
 

@@ -28,7 +28,7 @@ public class TrackingCauseMapDto {
 
     Long parnerId;
 
-    List<TrackingCauseMapFailProductDto> failProducts;
+    List<DicDto> dics;
 
 }
 

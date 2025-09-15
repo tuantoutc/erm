@@ -23,5 +23,5 @@ public class CauseCategoryDto {
     String name;
     String description; // Mô tả
     String note;
-    List<SystemDto> systemDtos ;
+    List<SystemDto> system ;
 }

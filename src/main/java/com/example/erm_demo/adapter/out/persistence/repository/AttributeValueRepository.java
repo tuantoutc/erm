@@ -9,4 +9,5 @@ public interface AttributeValueRepository extends JpaRepository<AttributeValueEn
 
     void deleteByAttributeId(Long id);
     List<AttributeValueEntity> findByAttributeId(Long attributeId);
+    List<AttributeValueEntity> findByAttributeIdIn(List<Long> attributeIds);
 }

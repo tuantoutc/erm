@@ -32,6 +32,7 @@ public class AttributeMapper {
         AttributeGroupEntity attributeGroupEntity= attributeGroupRepository.findById(entity.getAttributeGroupId())
                         .orElseThrow(()->new AppException(ErrorCode.ENTITY_NOT_FOUND));
         attributeDto.setAttributeGroup(attributeGroupMapper.maptoAttributeGroupDto(attributeGroupEntity));
+
         if(entity.getDataType() == null)
         {
             List<AttributeValueEntity> listAttributeValue = attributeValueRepository.findByAttributeId(entity.getId());
@@ -44,6 +45,24 @@ public class AttributeMapper {
         return attributeDto;
 
     }
+//    public AttributeDto maptoAttributeAndValue(AttributeGroupEntity entity) {
+//
+//        AttributeDto attributeDto = modelMapper.map(entity, AttributeDto.class);
+//        AttributeGroupEntity attributeGroupEntity= attributeGroupRepository.findById(entity.getAttributeGroupId())
+//                .orElseThrow(()->new AppException(ErrorCode.ENTITY_NOT_FOUND));
+//        attributeDto.setAttributeGroup(attributeGroupMapper.maptoAttributeGroupDto(attributeGroupEntity));
+//        if(entity.getDataType() == null)
+//        {
+//            List<AttributeValueEntity> listAttributeValue = attributeValueRepository.findByAttributeId(entity.getId());
+//            List<AttributeValueDto> listAttributeValueDto = listAttributeValue.stream()
+//                    .map(av -> modelMapper.map(av, AttributeValueDto.class))
+//                    .toList();
+//            attributeDto.setAttributeValues(listAttributeValueDto);
+//        }
+//        else attributeDto.setAttributeValues(null);
+//        return attributeDto;
+//
+//    }
 
 
 

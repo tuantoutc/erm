@@ -25,6 +25,21 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+
+# Cấu hình Swagger/OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    try-it-out-enabled: true
+    operations-sorter: alpha
+    tags-sorter: alpha
+    filter: false
+  show-actuator: false
+
 feign:
   client:
     system-service:

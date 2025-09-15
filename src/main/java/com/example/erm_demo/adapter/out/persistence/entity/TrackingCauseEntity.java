@@ -24,8 +24,6 @@ public class TrackingCauseEntity {
     @Column(name = "cause_id", nullable = false)
     Long causeId;
 
-    @Column(name = "sample_action_id", nullable = false)
-    Long sampleActionId;
 
     @Column(name="count")
     Long count;
